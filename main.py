@@ -4,19 +4,22 @@ import simple_sparsify
 
 s = 10
 
+# Read in matrix in CSR format
+A = io.mmread("matrices/1138_bus.mtx").tocsr() 
+
+
 
 if __name__ == '__main__': 
-    A = io.mmread("matrices/1138_bus.mtx") 
 
-    # TODO o
-    vectorized_sparsify = np.vectorize(simple_sparsify.sparsify)
+    A_nnz = A.nnz
 
-    A_prime = vectorized_sparsify(A)
+    simple_sparsify.sparsifyCSR(A, s)
 
-    print(type(A_prime))
-    print(A_prime.shape)
+    A_prime_nnz = A.nnz
 
-    # TODO: 
-    io.mmwrite("matrices/sparse_1138_bus.mtx", A_prime)
+    print(f"type(A): {A_nnz}")
+    print(f"A.shape: {A_prime_nnz}")
+
+    io.mmwrite("matrices/sparse_1138_bus.mtx", A)
 
 
