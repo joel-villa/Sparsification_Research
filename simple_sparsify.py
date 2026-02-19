@@ -3,6 +3,8 @@ import random
 '''
 Based on Theorem 8.2.2 in Sparsification Algorithms Paper:
 https://users.cs.utah.edu/~jeffp/teaching/cs7931-S15/cs7931/8-sparsification.pdf
+
+Increasing s => make more sparse 
 '''
 def sparsifyCSR(A, s=5):
     # Number of nonzeroes in A
@@ -19,6 +21,9 @@ def sparsifyCSR(A, s=5):
     A.eliminate_zeros()
     
     A_prime_nnz = A.nnz
-    
-    if (A_prime_nnz >= (nnz**2) / (s**2)):
+    e = nnz / s
+    # print(f"Expected number of nonzeroes: {e}")
+
+    #TODO: is this a silly check
+    if (A_prime_nnz >= (nnz / s) ** 2):
         print("Warning: number of nonzeroes in A' is greater than expectation squared")
