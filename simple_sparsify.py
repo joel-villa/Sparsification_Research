@@ -10,6 +10,9 @@ def sparsifyCSR(A, s=5):
     # Number of nonzeroes in A
     nnz = A.nnz
 
+    if s == 0:
+        return A
+
     for i in range(nnz):
         r = random.random() # r in range [0.0, 1.0)
         if r < 1/s:
