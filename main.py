@@ -67,7 +67,7 @@ p_sparse - the pecent the matrix was sparsified
 def plot(ss, diff, p_sparse):
     _, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,4))
 
-    ax.plot(ss, diff, marker='', label='"Accuracy (Based on 2 Norm)"')
+    ax.plot(ss, diff, marker='', label='Accuracy (Based on 2 Norm)')
     ax.plot(ss, p_sparse, marker='', label="Percent Sparsified")
     ax.set_xlabel('s')
     ax.set_title("Sparsification Behavior")
