@@ -9,9 +9,7 @@ NUM_ITERATIONS = 10
 
 # Read in matrix in CSR format
 A = io.mmread("matrices/1138_bus.mtx")#.tocsr() 
-print(type(A))
 
-# plot
 
 '''
 Return the percent difference of the 2 norm of the sparsified matrix 
@@ -19,7 +17,7 @@ A       - original matrix
 A_tilda - sparsified matrix
 '''
 def difference(A, A_tilda):
-    _, eigenvectors_A = eigs(A, k=1) #k = 1 -> only get top eigenvalue (spectral radius)
+    _, eigenvectors_A = eigs(A, k=1) #k = 1 -> only get top eigenvector
     _, eigenvectors_A_tilda = eigs(A_tilda, k=1) 
 
     # 2 norm of both top eigenvectors
