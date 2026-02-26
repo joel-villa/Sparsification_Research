@@ -16,12 +16,9 @@ As = [io.mmread(os.path.join(matrix_path, "494_bus.mtx")).tocsr(),
       io.mmread(os.path.join(matrix_path, "662_bus.mtx")).tocsr(),
       io.mmread(os.path.join(matrix_path, "685_bus.mtx")).tocsr(),
       io.mmread(os.path.join(matrix_path, "1138_bus.mtx")).tocsr(),
-    #   io.mmread(os.path.join(matrix_path, "abb313.mtx")).tocsr(),
       io.mmread(os.path.join(matrix_path, "arc130.mtx")).tocsr(),
       io.mmread(os.path.join(matrix_path, "ash85.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "ash292.mtx")).tocsr(),
-    #   io.mmread(os.path.join(matrix_path, "ash331.mtx")).tocsr(),
-    #   io.mmread(os.path.join(matrix_path, "ash958.mtx")).tocsr(),
+      io.mmread(os.path.join(matrix_path, "ash292.mtx")).tocsr()
       ]
 
 '''
