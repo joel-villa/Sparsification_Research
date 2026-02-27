@@ -1,5 +1,5 @@
 import numpy as np
-from scipy import io
+from scipy.io import mmread
 from scipy.sparse.linalg import eigs
 from sparse_algs.simple_sparsify import sparsify 
 import matplotlib.pyplot as plt
@@ -15,23 +15,22 @@ START = 1
 STOP = 4
 NUM = 100
 
-# Read in matrices in CSR format
-As = [io.mmread(os.path.join(matrix_path, "494_bus.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "662_bus.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "685_bus.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "1138_bus.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "arc130.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "ash85.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "ash292.mtx")).tocsr()
-      ]
+MTX_FILES = ["494_bus.mtx" ,
+             "662_bus.mtx" ,
+             "685_bus.mtx" ,
+             "1138_bus.mtx",
+             "arc130.mtx"  ,
+             "ash85.mtx"   ,
+             "ash292.mtx"  
+]
 
-'''
-Return the percent difference of the 2 norm of the sparsified matrices
-top eigenvector
-A       - original matrix
-A_tilda - sparsified matrix
-'''
 def difference(A, A_sparse, s):
+    '''
+    Return the percent difference of the 2 norm of the sparsified matrices
+    top eigenvector
+    A       - original matrix
+    A_tilda - sparsified matrix
+    '''
     _, e = eigs(A, k=1) #k = 1 -> only get top eigenvector
     _, e_sparse = eigs(A_sparse, k=1) 
 
@@ -75,36 +74,58 @@ def test(A):
 
     return (ss, nnzs, diffs)
 
-"""
-Generate plots demonstrating sparsification behavior
+def plot(X, Y, labels, x_label, y_label, title):
+    """
+    Generate plots
 
-ss       - the factor of sparsification
-diff     - the percent difference in the 2 norm
-p_sparse - the pecent the matrix was sparsified
+    X - A 2D array of x values
+    Y - A 2D array of y values
+    """
+    # ax[0].plot(ss, diff, marker='')
+    # ax[0].set_title("2 Norm Preservation")
+    # ax[0].set_xlabel('s')
 
-"""
-def plot(ss, diff, p_sparse):
-    # TODO fix plots
-    _, ax = plt.subplots(nrows=1, ncols=2, figsize=(10,4))
+    # ax[1].plot(ss, p_sparse, marker='')
+    # ax[1].set_title("Percent Sparsified")
+    # ax[1].set_xlabel('s')
 
-    ax[0].plot(ss, diff, marker='')
-    ax[0].set_title("2 Norm Preservation")
-    ax[0].set_xlabel('s')
-
-    ax[1].plot(ss, p_sparse, marker='')
-    ax[1].set_title("Percent Sparsified")
-    ax[1].set_xlabel('s')
-
+    for x, y, lbl in zip(X, Y, labels):
+        plt.plot(x, y, label=lbl)
+        
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
     plt.legend()
+
+    file_name = title.replace(" ", "_")
+    plt.savefig("plots/" + title + ".svg")
+
     plt.show()
-    plt.savefig("plots/2_norm_preservation.png")
 
-
+def load_A():
+    """
+    Load in the .mtx files as a scipy csr sparse matrix
+    """
+    A = []
+    for mtx_file in MTX_FILES:
+        # Read in matrices in CSR format
+        A.append(mmread(os.path.join(matrix_path, mtx_file)).tocsr())
+    return A
 
 if __name__ == '__main__': 
-    for A, i in zip(As, range(1)):
-        print(i)
+    #TODO: MSE
+    As = load_A()
+    S = []
+    P = []
+    D = []
+    for A , i in zip(As, range(2)):
+        # print(i)
         nnz = A.nnz
         ss, nnzs, diff = test(A)
         p_sparse = nnzs / nnz
-        plot(ss, diff, p_sparse)
+
+        D.append(diff)
+        S.append(ss)
+        P.append(p_sparse)
+    
+    plot(S, D, MTX_FILES, "s", rf"$||e - \tilde e||$", "Sparsification Behavior")
