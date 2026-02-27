@@ -113,6 +113,7 @@ def load_A():
     return A
 
 if __name__ == '__main__': 
+    #TODO: MSE
     As = load_A()
     S = []
     P = []
