@@ -23,13 +23,7 @@ def sparsify(A, s=5):
         r = random.random() # r in range [0.0, 1.0)
         if r < 1/s:
             # With probability 1/s, scale A_{i,j}
-            temp = A.data[i]
             A.data[i] *= s
-            if (s == 1 and A.data[i] != temp):
-                print(f"A.data[i]: {A.data[i]} temp: {temp}")
         else:
-            # With probability 1 - 1/s, sparsify A_{i,j}
-            if (s == 1):
-                print("why am I here?")
             A.data[i] = 0.0
     A.eliminate_zeros()

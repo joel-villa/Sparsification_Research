@@ -45,9 +45,6 @@ def difference(A, A_sparse, s):
     difference = e - e_sparse
     norm_of_diff = np.linalg.norm(difference, ord=2)
 
-    if (s == 1):
-        print(f"norm(|e - e_sparse|) = {norm_of_diff}")
-
     return norm_of_diff
 
 """
@@ -91,13 +88,11 @@ def plot(ss, diff, p_sparse):
     _, ax = plt.subplots(nrows=1, ncols=2, figsize=(10,4))
 
     ax[0].plot(ss, diff, marker='')
-    # ax.plot(ss, p_sparse, marker='', label="Percent Sparsified")
+    ax[0].set_title("2 Norm Preservation")
     ax[0].set_xlabel('s')
-    # ax[0].set_ylabel('s')
-    ax[0].set_title("Sparsification Behavior")
 
-    # ax[1].plot(ss, diff, marker='', label='Accuracy (Based on 2 Norm)')
     ax[1].plot(ss, p_sparse, marker='')
+    ax[1].set_title("Percent Sparsified")
     ax[1].set_xlabel('s')
 
     plt.legend()
@@ -111,7 +106,5 @@ if __name__ == '__main__':
         print(i)
         nnz = A.nnz
         ss, nnzs, diff = test(A)
-        print(diff)
         p_sparse = nnzs / nnz
         plot(ss, diff, p_sparse)
-    # plt.show
