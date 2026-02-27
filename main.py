@@ -15,15 +15,16 @@ START = 1
 STOP = 4
 NUM = 100
 
-# Read in matrices in CSR format
-As = [io.mmread(os.path.join(matrix_path, "494_bus.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "662_bus.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "685_bus.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "1138_bus.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "arc130.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "ash85.mtx")).tocsr(),
-      io.mmread(os.path.join(matrix_path, "ash292.mtx")).tocsr()
-      ]
+Ms = ["494_bus.mtx" ,
+      "662_bus.mtx" ,
+      "685_bus.mtx" ,
+      "1138_bus.mtx",
+      "arc130.mtx"  ,
+      "ash85.mtx"   ,
+      "ash292.mtx"  
+]
+
+
 
 '''
 Return the percent difference of the 2 norm of the sparsified matrices
@@ -78,15 +79,16 @@ def test(A):
 """
 Generate plots demonstrating sparsification behavior
 
-ss       - the factor of sparsification
-diff     - the percent difference in the 2 norm
-p_sparse - the pecent the matrix was sparsified
+X - A 2D array of x values
+Y - A 2D array of y values
 
 """
-def plot(ss, diff, p_sparse):
-    # TODO fix plots
-    _, ax = plt.subplots(nrows=1, ncols=2, figsize=(10,4))
-
+def plot(X, Y, title):
+    i = 0
+    for x, y in zip(X, Y):
+        plt.plot(X[i], Y[i])
+        plt.
+        i += 1
     ax[0].plot(ss, diff, marker='')
     ax[0].set_title("2 Norm Preservation")
     ax[0].set_xlabel('s')
@@ -94,14 +96,27 @@ def plot(ss, diff, p_sparse):
     ax[1].plot(ss, p_sparse, marker='')
     ax[1].set_title("Percent Sparsified")
     ax[1].set_xlabel('s')
-
+    plt.plot()
     plt.legend()
     plt.show()
-    plt.savefig("plots/2_norm_preservation.png")
+    plt.savefig("plots/" + title + ".svg")
 
-
+def load_A():
+    #TODO: load this properly
+    # Read in matrices in CSR format
+    As = [io.mmread(os.path.join(matrix_path, "494_bus.mtx")).tocsr(),
+          io.mmread(os.path.join(matrix_path, "662_bus.mtx")).tocsr(),
+          io.mmread(os.path.join(matrix_path, "685_bus.mtx")).tocsr(),
+          io.mmread(os.path.join(matrix_path, "1138_bus.mtx")).tocsr(),
+          io.mmread(os.path.join(matrix_path, "arc130.mtx")).tocsr(),
+          io.mmread(os.path.join(matrix_path, "ash85.mtx")).tocsr(),
+          io.mmread(os.path.join(matrix_path, "ash292.mtx")).tocsr()
+          ]
 
 if __name__ == '__main__': 
+
+    S = []
+    P = []
     for A, i in zip(As, range(1)):
         print(i)
         nnz = A.nnz
