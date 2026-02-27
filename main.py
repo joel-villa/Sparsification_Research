@@ -9,7 +9,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 matrix_path = os.path.join(BASE_DIR, "matrices")
 
-NUM_ITERATIONS = 1
+NUM_ITERATIONS = 10
+
+START = 1
+STOP = 4
+NUM = 100
 
 # Read in matrices in CSR format
 As = [io.mmread(os.path.join(matrix_path, "494_bus.mtx")).tocsr(),
@@ -30,35 +34,32 @@ A_tilda - sparsified matrix
 def difference(A, A_sparse, s):
     _, e = eigs(A, k=1) #k = 1 -> only get top eigenvector
     _, e_sparse = eigs(A_sparse, k=1) 
-    # print(f"e: {e}")
-    # print(f"e_sparse: {e_sparse}")
-    difference = abs(e) - abs(e_sparse)
+
+    e = e.real
+    e_sparse = e_sparse.real
+
+    if np.vdot(e, e_sparse) < 0:
+        #Force both eigenvectors to point in similar directions
+        e_sparse = -e_sparse
+
+    difference = e - e_sparse
     norm_of_diff = np.linalg.norm(difference, ord=2)
 
     if (s == 1):
-        print(difference)
         print(f"norm(|e - e_sparse|) = {norm_of_diff}")
-    # print()
 
     return norm_of_diff
-    # norm_e_tilda = np.linalg.norm(, ord=1)
-    # # print(f"norm_e: {norm_e}")
-    # # print(f"norm_e_tilda: {norm_e_tilda}")
-    # return abs()
 
 """
 
 """
 def test(A):
-    start = 1
-    stop = 2
-    num = 100
     
-    diffs = np.zeros(num)
-    nnzs  = np.zeros(num)
-    ss    = np.zeros(num)
+    diffs = np.zeros(NUM)
+    nnzs  = np.zeros(NUM)
+    ss    = np.zeros(NUM)
 
-    for i, s in zip(range(num), np.linspace(start, stop, num)):
+    for i, s in zip(range(NUM), np.linspace(START, STOP, NUM)):
         diff = []
         nnz = []
         for _ in range(NUM_ITERATIONS):
