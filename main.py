@@ -9,7 +9,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 matrix_path = os.path.join(BASE_DIR, "matrices")
 
-NUM_ITERATIONS = 10
+NUM_ITERATIONS = 5
 
 START = 1
 STOP = 4
@@ -81,26 +81,17 @@ def plot(X, Y, labels, x_label, y_label, title):
     X - A 2D array of x values
     Y - A 2D array of y values
     """
-    # ax[0].plot(ss, diff, marker='')
-    # ax[0].set_title("2 Norm Preservation")
-    # ax[0].set_xlabel('s')
-
-    # ax[1].plot(ss, p_sparse, marker='')
-    # ax[1].set_title("Percent Sparsified")
-    # ax[1].set_xlabel('s')
 
     for x, y, lbl in zip(X, Y, labels):
         plt.plot(x, y, label=lbl)
         
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.legend()
-
-    file_name = title.replace(" ", "_")
-    plt.savefig("plots/" + title + ".svg")
-
-    plt.show()
+        plt.title(title)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
+        plt.legend()
+        file_name = title.replace(" ", "_")
+        plt.savefig("plots/" + file_name + lbl + ".svg")
+        plt.show()
 
 def load_A():
     """
@@ -118,7 +109,7 @@ if __name__ == '__main__':
     S = []
     P = []
     D = []
-    for A , i in zip(As, range(2)):
+    for A , i in zip(As, range(len(As))):
         # print(i)
         nnz = A.nnz
         ss, nnzs, diff = test(A)
@@ -127,5 +118,6 @@ if __name__ == '__main__':
         D.append(diff)
         S.append(ss)
         P.append(p_sparse)
+    
     
     plot(S, D, MTX_FILES, "s", rf"$||e - \tilde e||$", "Sparsification Behavior")
