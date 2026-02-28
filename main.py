@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.io import mmread
 from scipy.sparse.linalg import eigs
-from sparse_algs.simple_sparsify import sparsify 
+from sparse_algs.sparse_algs import sparsify 
 import matplotlib.pyplot as plt
 import os
 
