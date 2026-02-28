@@ -96,6 +96,7 @@ def plot(X, Y, labels, x_label, y_label, title):
 def load_A():
     """
     Load in the .mtx files as a scipy csr sparse matrix
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html 
     """
     A = []
     for mtx_file in MTX_FILES:
