@@ -1,5 +1,6 @@
 import random
 from math import log2
+from numpy import linspace
 
 """
 The following sparsification algorithms are based on 
@@ -7,28 +8,47 @@ the Sparsification Algorithms Paper:
 https://users.cs.utah.edu/~jeffp/teaching/cs7931-S15/cs7931/8-sparsification.pdf
 """
 
-def s_valid(s, n, d):
+def s_upper_bound(num_rows, num_cols):
     """
-    Check if the s is valid
+    Get the upper bound for the valid s values of a matrix
 
-    s - sparsification factor
-    n - first dimension of the matrix A
-    d - second dimensions of the matrix A
+    num_rows - the first dimension of a matrix 
+    num_cols - second dimension of a matrix
+    """
+    numerator = (num_rows + num_cols)
+    # TODO: assuming log base 2, not entirely sure this is correct
+    denominator = 4 * log2(num_rows + num_cols) ** 6
+    return numerator / denominator
+
+def n_valid_ss(num_rows, num_cols, n):
+    """
+    Get an array of n equally spaced valid s values for a matrix with the given 
+
+    num_rows - the first dimension of the matrix to sparsify
+    num_cols - the second dimension of the matrix to sparsify
+    n        - the number of valid s's to generate
+    """
+    return linspace(1, s_upper_bound(num_rows, num_cols), n)
+
+def s_valid(s, num_rows, num_cols):
+    """
+    Check if s is valid for a matrix with given dimensions
+
+    s        - sparsification factor
+    num_rows - first dimension of the  matrix A
+    num_cols - second dimensions of the matrix A
 
     return - True if valid, False if not
     """
 
     if s < 1:
         # s too small
-        print("INVALID s, s must be greater than or equal to one")
+        print(f"INVALID s, {s} < 1")
         return False
     
-    # TODO: assuming log base 2, not entirely sure this is correct 
-    numerator = (n + d) 
-    denominator = 4 * log2(n + d) ** 6
-    if (s > numerator / denominator):
+    if (s > s_upper_bound(num_rows, num_cols)):
         # s too big
-        print("INVALID s, s must be less than or equal to (n + d) / (4 * log(n + d)^6))")
+        print(f"INVALID s, {s} > {s_upper_bound(num_rows, num_cols)} = (n + d) / (4 * log(n + d)^6))")
     return True
 
 def sparsify(A, s=2):
