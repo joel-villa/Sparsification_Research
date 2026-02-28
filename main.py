@@ -1,7 +1,8 @@
 import numpy as np
 from scipy.io import mmread
 from scipy.sparse.linalg import eigs
-from sparse_algs.simple_sparsify import sparsify 
+from sparse_algs.sparse_algs import sparsify 
+from sparse_algs.sparse_algs import n_valid_ss
 import matplotlib.pyplot as plt
 import os
 
@@ -10,10 +11,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 matrix_path = os.path.join(BASE_DIR, "matrices")
 
 NUM_ITERATIONS = 5
-
-START = 1
-STOP = 4
-NUM = 100
+NUM_SS = 50
 
 MTX_FILES = ["494_bus.mtx" ,
              "662_bus.mtx" ,
@@ -24,12 +22,13 @@ MTX_FILES = ["494_bus.mtx" ,
              "ash292.mtx"  
 ]
 
-def difference(A, A_sparse, s):
+def difference(A, A_sparse):
     '''
-    Return the percent difference of the 2 norm of the sparsified matrices
-    top eigenvector
-    A       - original matrix
-    A_tilda - sparsified matrix
+    Return the 2 norm the difference of the top eigenvectors of the 
+    matrix A and it's sparsified counterpart 
+
+    A        - original matrix
+    A_sparse - sparsified matrix
     '''
     _, e = eigs(A, k=1) #k = 1 -> only get top eigenvector
     _, e_sparse = eigs(A_sparse, k=1) 
@@ -46,29 +45,38 @@ def difference(A, A_sparse, s):
 
     return norm_of_diff
 
-"""
-
-"""
 def test(A):
+    """
+    Run sparsification algorithm on the matrix A given various s values
     
-    diffs = np.zeros(NUM)
-    nnzs  = np.zeros(NUM)
-    ss    = np.zeros(NUM)
+    RETURN:
+    ss    - the s values run
+    nnzs  - the number of nonzeros on the sparsified A's
+    diffs - the difference in the two norm of the sparsified A's
+    """
+    
+    diffs = np.zeros(NUM_SS)
+    nnzs  = np.zeros(NUM_SS)
+    ss    = np.zeros(NUM_SS)
 
-    for i, s in zip(range(NUM), np.linspace(START, STOP, NUM)):
-        diff = []
-        nnz = []
-        for _ in range(NUM_ITERATIONS):
+    cols, rows = A.shape
+
+    ss = np.linspace(1, 2, NUM_SS)
+    # ss = n_valid_ss(cols, rows, NUM_SS)
+
+    for i, s in zip(range(NUM_SS), ss):
+        if (s < 1):
+            print(f"ss: {ss}")
+        diff = np.zeros(NUM_ITERATIONS)
+        nnz = np.zeros(NUM_ITERATIONS)
+        for j in range(NUM_ITERATIONS):
             A_prime = A.copy()
             sparsify(A_prime, s)
-            diff.append(difference(A, A_prime, s))
-            nnz.append(A_prime.nnz) 
+            diff[j] = difference(A, A_prime)
+            nnz[j] = A_prime.nnz
 
-        # print(f"diff: {diff}")
         average_diff = np.mean(diff)
         average_nnz = np.mean(nnz)
-
-        ss[i] = s
         diffs[i] = average_diff
         nnzs[i] = average_nnz
 
@@ -85,17 +93,18 @@ def plot(X, Y, labels, x_label, y_label, title):
     for x, y, lbl in zip(X, Y, labels):
         plt.plot(x, y, label=lbl)
         
-        plt.title(title)
-        plt.xlabel(x_label)
-        plt.ylabel(y_label)
-        plt.legend()
-        file_name = title.replace(" ", "_")
-        plt.savefig("plots/" + file_name + lbl + ".svg")
-        plt.show()
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.legend()
+    file_name = title.replace(" ", "_")
+    plt.savefig("plots/" + file_name  + ".svg")
+    plt.show()
 
 def load_A():
     """
     Load in the .mtx files as a scipy csr sparse matrix
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html 
     """
     A = []
     for mtx_file in MTX_FILES:
@@ -110,7 +119,7 @@ if __name__ == '__main__':
     P = []
     D = []
     for A , i in zip(As, range(len(As))):
-        # print(i)
+        print(MTX_FILES[i])
         nnz = A.nnz
         ss, nnzs, diff = test(A)
         p_sparse = nnzs / nnz
