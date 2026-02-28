@@ -28,6 +28,11 @@ def n_valid_ss(num_rows, num_cols, n):
     num_cols - the second dimension of the matrix to sparsify
     n        - the number of valid s's to generate
     """
+
+    upper = s_upper_bound(num_cols, num_rows)
+    if (upper < 1):
+        print(f"NO VALID S VALUES: upperbound = {upper} < 1")
+        return [1]
     return linspace(1, s_upper_bound(num_rows, num_cols), n)
 
 def s_valid(s, num_rows, num_cols):
