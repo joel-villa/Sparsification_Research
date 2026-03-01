@@ -16,7 +16,7 @@ def pow_method(A, tol=1e-6, max_iter=100):
     max_iter - The maximum number of iterations
     """
     # Choose the initial vector x
-    x = np.array([[1, 2]]).T
+    x = np.array([[1, 2]]).T #TODO
 
     # Define the variable lam_prev to store the
     # previous approximation for the largest eigenvalue
