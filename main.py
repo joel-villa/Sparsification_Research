@@ -1,8 +1,7 @@
-import numpy as np
 from scipy.io import mmread
 from scipy.sparse.linalg import eigs
-from sparse_algs.sparse_algs import sparsify 
-from sparse_algs.sparse_algs import n_valid_ss
+import numpy as np
+import sparse_algs.sparse_algs as spa
 import matplotlib.pyplot as plt
 import os
 
@@ -12,6 +11,7 @@ matrix_path = os.path.join(BASE_DIR, "matrices")
 
 NUM_ITERATIONS = 5
 NUM_SS = 50
+MAX_S = 5
 
 MTX_FILES = ["494_bus.mtx" ,
              "662_bus.mtx" ,
@@ -57,21 +57,28 @@ def test(A):
     
     diffs = np.zeros(NUM_SS)
     nnzs  = np.zeros(NUM_SS)
-    ss    = np.zeros(NUM_SS)
 
     cols, rows = A.shape
 
-    ss = np.linspace(1, 2, NUM_SS)
-    # ss = n_valid_ss(cols, rows, NUM_SS)
+    
+    s_max = spa.s_upper_bound(rows, cols, log_base=10)
+
+    if s_max < 1:
+        ## the upper bound is below 1, no valid s's
+        print(f"s_max = {s_max} < 1, no valid s's")
+        s_max = MAX_S
+
+    if s_max > MAX_S:
+        s_max = MAX_S
+
+    ss = np.linspace(1, s_max, NUM_SS)
 
     for i, s in zip(range(NUM_SS), ss):
-        if (s < 1):
-            print(f"ss: {ss}")
         diff = np.zeros(NUM_ITERATIONS)
         nnz = np.zeros(NUM_ITERATIONS)
         for j in range(NUM_ITERATIONS):
             A_prime = A.copy()
-            sparsify(A_prime, s)
+            spa.sparsify(A_prime, s)
             diff[j] = difference(A, A_prime)
             nnz[j] = A_prime.nnz
 
@@ -118,7 +125,9 @@ if __name__ == '__main__':
     S = []
     P = []
     D = []
-    for A , i in zip(As, range(len(As))):
+
+    num_mats = len(As)
+    for A , i in zip(As, range(num_mats)):
         print(MTX_FILES[i])
         nnz = A.nnz
         ss, nnzs, diff = test(A)

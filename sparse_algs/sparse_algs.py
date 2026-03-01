@@ -1,23 +1,32 @@
 import random
-from math import log2
+from math import log
 from numpy import linspace
 
 """
 The following sparsification algorithms are based on 
 the Sparsification Algorithms Paper:
 https://users.cs.utah.edu/~jeffp/teaching/cs7931-S15/cs7931/8-sparsification.pdf
+
+Which is a summary of the following paper:
+https://dl.acm.org/doi/pdf/10.1145/1219092.1219097 
 """
 
-def s_upper_bound(num_rows, num_cols):
+def s_upper_bound(num_rows, num_cols, log_base=10):
     """
     Get the upper bound for the valid s values of a matrix
 
     num_rows - the first dimension of a matrix 
     num_cols - second dimension of a matrix
+    log_base - base of the log used to generate the upperbound
+
+    TODO: assuming log base 10, not entirely sure this is correct, the following
+    bounds are given by base 10 and 2 respectively (assumed square matrix):
+    base 10: num_rows > 17,755 -> max valid s value > 1
+    base 2: num_rows > 2,150,000,000 -> max valid s value > 1   
     """
     numerator = (num_rows + num_cols)
-    # TODO: assuming log base 2, not entirely sure this is correct
-    denominator = 4 * log2(num_rows + num_cols) ** 6
+    
+    denominator = 4 *(log(num_rows + num_cols, log_base) ** 6)
     return numerator / denominator
 
 def n_valid_ss(num_rows, num_cols, n):
@@ -48,12 +57,13 @@ def s_valid(s, num_rows, num_cols):
 
     if s < 1:
         # s too small
-        print(f"INVALID s, {s} < 1")
+        # print(f"INVALID s, {s} < 1")
         return False
     
     if (s > s_upper_bound(num_rows, num_cols)):
         # s too big
-        print(f"INVALID s, {s} > {s_upper_bound(num_rows, num_cols)} = (n + d) / (4 * log(n + d)^6))")
+        # print(f"INVALID s, {s} > {s_upper_bound(num_rows, num_cols)} = (n + d) / (4 * log(n + d)^6))")
+        return False 
     return True
 
 def sparsify(A, s=2):
@@ -72,8 +82,8 @@ def sparsify(A, s=2):
 
     n, d = A.shape
 
-    # Check for invalid s's
-    if (not s_valid(s, n, d)):
+    # Check for s too small
+    if (s < 1):
         return A
 
     for i in range(nnz):
