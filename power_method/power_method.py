@@ -15,8 +15,17 @@ def pow_method(A, tol=1e-6, max_iter=100):
                the approximations and the actual values)
     max_iter - The maximum number of iterations
     """
-    # Choose the initial vector x
-    x = np.array([[1, 2]]).T #TODO
+    cols, rows = A.size
+
+    if (cols != rows):
+        print("Power method doesn't work for non-square matrices")
+
+    # Random number generator:
+    r_gen = np.random.default_rng()
+
+    # Choose the initial vector x, 1 by n
+    # Initial guess is close to zero 
+    x = r_gen.normal(loc=0.0, scale=0.01, size=rows) 
 
     # Define the variable lam_prev to store the
     # previous approximation for the largest eigenvalue
@@ -42,3 +51,4 @@ def pow_method(A, tol=1e-6, max_iter=100):
     # Return the approximations for the
     # largest eigenvalue and eigenvector
     return (lam, x)
+    #TODO test this against eigs
