@@ -10,33 +10,31 @@ import ssgetpy
 import os
 
 # Matrix must be at least 17,755 by 17,755 to have valid s-values for sparse-alg
-mats = ssgetpy.search(rowbounds=(17755,100000), isspd=True, limit=2)
+mats = ssgetpy.search(rowbounds=(17755,100000), isspd=True, limit=5)
 
 
 def get_mats():
-    matrices = []
+    #TODO: convert to class
+    matrices = {}
 
     for m in mats:
         m.download()  # Download the matrix
         
         # Get the local path of the .tar.gz file
-        path_tuple = m.localpath()  # This returns a tuple (two identical paths)
-        path = path_tuple[0]  # Use the first path (both are the same)
-
-        # Print the path for debugging
-        print(f"Local path of matrix {m.name}: {path}")
+        path_tuple = m.localpath() # This returns a tuple (two identical paths)
+        tar_path = path_tuple[0]       # Use the first path (both are the same)
         
         try:
             # Extract the .tar.gz file to get the matrix file inside
-            if path.endswith('.tar.gz'):
-                with tarfile.open(path, 'r:gz') as tar:
+            if tar_path.endswith('.tar.gz'):
+                with tarfile.open(tar_path, 'r:gz') as tar:
                     # Extract files in the same folder as the .tar.gz file
-                    extract_dir = os.path.dirname(path)
-                    extract_dir = os.path.join(extract_dir, m.name)
+                    extract_dir = os.path.dirname(tar_path)
                     tar.extractall(path=extract_dir)  # Extract to the same folder
                 
                 # After extraction, find the matrix file (.mtx) in the extracted files
                 matrix_file = None
+                extract_dir = os.path.join(extract_dir, m.name)
                 for extracted_file in os.listdir(extract_dir):
                     if extracted_file.endswith('.mtx'):
                         matrix_file = extracted_file
@@ -48,32 +46,19 @@ def get_mats():
                 # Full path to the extracted matrix file
                 extracted_path = os.path.join(extract_dir, matrix_file)
 
-                # Print extracted matrix path for debugging
-                print(f"Extracted matrix path: {extracted_path}")
-
                 # Now, read the extracted matrix file using mmread
                 A = mmread(extracted_path).tocsr()
-                matrices.append(A)
+                # matrices.append(A)
+                matrices[m.name] = A
             else:
                 print(f"Matrix {m.name} is not in .tar.gz format.")
         
         except Exception as e:
+            # Print exception
             print(f"Error loading matrix {m.name}: {e}")
 
     return matrices
 
-# def get_mats():
-#     """
-#     A getter
-#     TODO: convert to Class
-#     """
-#     As = []
-#     for m in mats:
-#         m.download()  # downloads the matrix
-
-#         # path = m.localpath  # path to the downloaded .mtx file
-#         A = m.load().tocsr()
-
-#         As.append(A)
-#         mmread(m).tocsr()
-#     return As
+if __name__ == '__main__': 
+    As = get_mats()
+    print(As)
