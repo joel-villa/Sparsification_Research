@@ -4,6 +4,7 @@ import numpy as np
 import sparse_algs.sparse_algs as spa
 import matplotlib.pyplot as plt
 import os
+from MatGetter import get_mats
 
 # Get path to matrices 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -119,9 +120,16 @@ def load_A():
         A.append(mmread(os.path.join(matrix_path, mtx_file)).tocsr())
     return A
 
+def load_big():
+  	"""
+  	Loading large matrices
+  	"""
+  	return get_mats()
+  
 if __name__ == '__main__': 
     #TODO: MSE
-    As = load_A()
+    #As = load_A()
+		As = load_Big()
     S = []
     P = []
     D = []
