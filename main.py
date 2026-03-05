@@ -4,6 +4,7 @@ import numpy as np
 import sparse_algs.sparse_algs as spa
 import matplotlib.pyplot as plt
 import os
+from MatGetter import get_mats
 
 # Get path to matrices 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -98,15 +99,15 @@ def plot(X, Y, labels, x_label, y_label, title):
     """
 
     for x, y, lbl in zip(X, Y, labels):
-        plt.plot(x, y, label=lbl)
-        
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.legend()
-    file_name = title.replace(" ", "_")
-    plt.savefig("plots/" + file_name  + ".svg")
-    plt.show()
+        t = title + " of " + lbl
+        plt.plot(x, y)
+        plt.title(t)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
+        plt.legend()
+        file_name = t.replace(" ", "_")
+        plt.savefig("plots/" + file_name  + ".svg")
+        plt.show()
 
 def load_A():
     """
@@ -119,16 +120,22 @@ def load_A():
         A.append(mmread(os.path.join(matrix_path, mtx_file)).tocsr())
     return A
 
+def load_big():
+    """
+    Loading large matrices
+    """
+    return get_mats()
+  
 if __name__ == '__main__': 
     #TODO: MSE
-    As = load_A()
+    #As = load_A()\
+    A_dict = load_big()
     S = []
     P = []
     D = []
-
-    num_mats = len(As)
-    for A , i in zip(As, range(num_mats)):
-        print(MTX_FILES[i])
+    names = []
+    for name, A in A_dict.items():
+        nnz = A.nnz
         nnz = A.nnz
         ss, nnzs, diff = test(A)
         p_sparse = nnzs / nnz
@@ -136,6 +143,18 @@ if __name__ == '__main__':
         D.append(diff)
         S.append(ss)
         P.append(p_sparse)
+        names.append(name)
+    
+
+    # for A , i in zip(As, range(num_mats)):
+    #     print(MTX_FILES[i])
+    #     nnz = A.nnz
+    #     ss, nnzs, diff = test(A)
+    #     p_sparse = nnzs / nnz
+
+    #     D.append(diff)
+    #     S.append(ss)
+    #     P.append(p_sparse)
     
     
-    plot(S, D, MTX_FILES, "s", rf"$||e - \tilde e||$", "Sparsification Behavior")
+    plot(S, D, names, "s", rf"$||e - \tilde e||$", "Sparsification Behavior")
