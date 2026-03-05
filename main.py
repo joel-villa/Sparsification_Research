@@ -23,9 +23,26 @@ MTX_FILES = ["494_bus.mtx" ,
              "ash292.mtx"  
 ]
 
-def difference(A, A_sparse):
+def norm_of_diff(v1, v2, s):
+    """
+    Return the 2 norm of the difference of the two vectors
+    """
+
+    dot_prod = np.vdot(v1, v2)
+    if dot_prod < 0:
+        #Force both eigenvectors to point in similar directions
+        v2 = -v2
+
+    difference = v1 - v2
+    if (s == 1):
+        print(f"np.vdot(e, e_sparse) = {dot_prod}")
+    norm_of_diff = np.linalg.norm(difference, ord=2)
+
+    return norm_of_diff
+
+def difference(A, A_sparse, s):
     '''
-    Return the 2 norm the difference of the top eigenvectors of the 
+    Return the 2 norm of the difference of the top eigenvectors of the 
     matrix A and it's sparsified counterpart 
 
     A        - original matrix
@@ -37,14 +54,7 @@ def difference(A, A_sparse):
     e = e.real
     e_sparse = e_sparse.real
 
-    if np.vdot(e, e_sparse) < 0:
-        #Force both eigenvectors to point in similar directions
-        e_sparse = -e_sparse
-
-    difference = e - e_sparse
-    norm_of_diff = np.linalg.norm(difference, ord=2)
-
-    return norm_of_diff
+    return norm_of_diff(e, e_sparse, s)
 
 def test(A):
     """
@@ -80,7 +90,9 @@ def test(A):
         for j in range(NUM_ITERATIONS):
             A_prime = A.copy()
             spa.sparsify(A_prime, s)
-            diff[j] = difference(A, A_prime)
+            diff[j] = difference(A, A_prime, s)
+            if (s == 1):
+                print(f"s = {s}, diff[j] = {diff[j]}, A.nnz = {A.nnz}, A_prime.nnz = {A_prime.nnz}")
             nnz[j] = A_prime.nnz
 
         average_diff = np.mean(diff)
@@ -90,18 +102,20 @@ def test(A):
 
     return (ss, nnzs, diffs)
 
-def plot(X, Y, labels, x_label, y_label, title):
+def plot(X, Y, labels, ns):
     """
     Generate plots
 
     X - A 2D array of x values
     Y - A 2D array of y values
     """
-
-    for x, y, lbl in zip(X, Y, labels):
+    title = "Sparsification Behavior"
+    x_label = "s"
+    y_label = rf"$||e - \tilde e||$"
+    for x, y, lbl, n in zip(X, Y, labels, ns):
         t = title + " of " + lbl
         plt.plot(x, y)
-        plt.title(t)
+        plt.title(t + f" n = {n}")
         plt.xlabel(x_label)
         plt.ylabel(y_label)
         plt.legend()
@@ -120,22 +134,16 @@ def load_A():
         A.append(mmread(os.path.join(matrix_path, mtx_file)).tocsr())
     return A
 
-def load_big():
-    """
-    Loading large matrices
-    """
-    return get_mats()
-  
-if __name__ == '__main__': 
-    #TODO: MSE
-    #As = load_A()\
-    A_dict = load_big()
+def test_smalls():
+    As = load_A()
     S = []
     P = []
     D = []
-    names = []
-    for name, A in A_dict.items():
-        nnz = A.nnz
+    ns = []
+
+    num_mats = len(MTX_FILES)
+    for A , i in zip(As, range(num_mats)):
+        print(MTX_FILES[i])
         nnz = A.nnz
         ss, nnzs, diff = test(A)
         p_sparse = nnzs / nnz
@@ -143,18 +151,35 @@ if __name__ == '__main__':
         D.append(diff)
         S.append(ss)
         P.append(p_sparse)
+        ns.append(nnz)
+
+    plot(S, D, MTX_FILES, ns)
+
+
+def test_bigs():
+    """
+    Doing tests for large matrices 
+    """
+    A_dict = get_mats()
+    S = []
+    P = []
+    D = []
+    names = []
+    ns = []
+    for name, A in A_dict.items():
+        # if (name == "bcsstm39" or name == "crystm03"):
+        print(name)
+        nnz = A.nnz
+        ss, nnzs, diff = test(A)
+        p_sparse = nnzs / nnz
+        D.append(diff)
+        S.append(ss)
+        P.append(p_sparse)
         names.append(name)
-    
+        ns.append(nnz)
 
-    # for A , i in zip(As, range(num_mats)):
-    #     print(MTX_FILES[i])
-    #     nnz = A.nnz
-    #     ss, nnzs, diff = test(A)
-    #     p_sparse = nnzs / nnz
-
-    #     D.append(diff)
-    #     S.append(ss)
-    #     P.append(p_sparse)
-    
-    
-    plot(S, D, names, "s", rf"$||e - \tilde e||$", "Sparsification Behavior")
+    plot(S, D, names, ns)
+  
+if __name__ == '__main__': 
+    #TODO: MSE
+    test_smalls()

@@ -1,0 +1,55 @@
+bcsstk36
+np.vdot(e, e_sparse) = -0.9999999999999999
+s = 1.0, diff[j] = 7.326072681633648e-14, A.nnz = 1143140, A_prime.nnz = 1143140
+np.vdot(e, e_sparse) = 0.9999999999999987
+s = 1.0, diff[j] = 2.105730466904566e-13, A.nnz = 1143140, A_prime.nnz = 1143140
+np.vdot(e, e_sparse) = -0.9999999999999993
+s = 1.0, diff[j] = 6.373586586571714e-14, A.nnz = 1143140, A_prime.nnz = 1143140
+np.vdot(e, e_sparse) = 1.0
+s = 1.0, diff[j] = 2.0957122552646662e-14, A.nnz = 1143140, A_prime.nnz = 1143140
+np.vdot(e, e_sparse) = 0.9999999999999994
+s = 1.0, diff[j] = 5.759996808385975e-14, A.nnz = 1143140, A_prime.nnz = 1143140
+bcsstm39
+np.vdot(e, e_sparse) = 0.3550630042335774
+s = 1.0, diff[j] = 1.13572619567079, A.nnz = 46772, A_prime.nnz = 46772
+np.vdot(e, e_sparse) = -0.12054294056645642
+s = 1.0, diff[j] = 1.3262405961465258, A.nnz = 46772, A_prime.nnz = 46772
+np.vdot(e, e_sparse) = 0.17500166143070914
+s = 1.0, diff[j] = 1.2845219644438093, A.nnz = 46772, A_prime.nnz = 46772
+np.vdot(e, e_sparse) = -0.08604318319866394
+s = 1.0, diff[j] = 1.3520035627181868, A.nnz = 46772, A_prime.nnz = 46772
+np.vdot(e, e_sparse) = -0.5470348463083097
+s = 1.0, diff[j] = 0.951803712633747, A.nnz = 46772, A_prime.nnz = 46772
+crystm03
+np.vdot(e, e_sparse) = -0.14196903508945305
+s = 1.0, diff[j] = 1.309985469316777, A.nnz = 583770, A_prime.nnz = 583770
+np.vdot(e, e_sparse) = -0.7915210128643544
+s = 1.0, diff[j] = 0.6457228308425327, A.nnz = 583770, A_prime.nnz = 583770
+np.vdot(e, e_sparse) = -0.24402310994174617
+s = 1.0, diff[j] = 1.229615297609991, A.nnz = 583770, A_prime.nnz = 583770
+np.vdot(e, e_sparse) = -0.5208966513019397
+s = 1.0, diff[j] = 0.9788803284345448, A.nnz = 583770, A_prime.nnz = 583770
+np.vdot(e, e_sparse) = -0.04253181805473185
+s = 1.0, diff[j] = 1.3838122574578293, A.nnz = 583770, A_prime.nnz = 583770
+ct20stif
+np.vdot(e, e_sparse) = 0.9999999999999998
+s = 1.0, diff[j] = 4.6611871320019114e-11, A.nnz = 2698463, A_prime.nnz = 2600295
+np.vdot(e, e_sparse) = -0.9999999999999993
+s = 1.0, diff[j] = 1.4946901292987562e-11, A.nnz = 2698463, A_prime.nnz = 2600295
+np.vdot(e, e_sparse) = -1.0000000000000002
+s = 1.0, diff[j] = 2.9669069016857707e-11, A.nnz = 2698463, A_prime.nnz = 2600295
+np.vdot(e, e_sparse) = 0.9999999999999993
+s = 1.0, diff[j] = 2.7534931860363965e-11, A.nnz = 2698463, A_prime.nnz = 2600295
+np.vdot(e, e_sparse) = 0.9999999999999996
+s = 1.0, diff[j] = 2.8034207706315923e-11, A.nnz = 2698463, A_prime.nnz = 2600295
+msc23052
+np.vdot(e, e_sparse) = -0.9999999999999997
+s = 1.0, diff[j] = 8.623771913731084e-14, A.nnz = 1154814, A_prime.nnz = 1142686
+np.vdot(e, e_sparse) = -0.9999999999999994
+s = 1.0, diff[j] = 2.526678815727215e-14, A.nnz = 1154814, A_prime.nnz = 1142686
+np.vdot(e, e_sparse) = -1.0000000000000016
+s = 1.0, diff[j] = 5.0737590667417364e-14, A.nnz = 1154814, A_prime.nnz = 1142686
+np.vdot(e, e_sparse) = -1.0000000000000004
+s = 1.0, diff[j] = 4.4298758114572474e-14, A.nnz = 1154814, A_prime.nnz = 1142686
+np.vdot(e, e_sparse) = 1.0
+s = 1.0, diff[j] = 8.418453345094548e-14, A.nnz = 1154814, A_prime.nnz = 1142686
