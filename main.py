@@ -121,15 +121,15 @@ def load_A():
     return A
 
 def load_big():
-  	"""
-  	Loading large matrices
-  	"""
-  	return get_mats()
+    """
+    Loading large matrices
+    """
+    return get_mats()
   
 if __name__ == '__main__': 
     #TODO: MSE
-    #As = load_A()
-		As = load_Big()
+    #As = load_A()\
+    As = load_big()
     S = []
     P = []
     D = []
