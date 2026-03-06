@@ -69,6 +69,28 @@ class Sparsifier():
             return False 
         return True
 
+    def sparse_entry(self, x, s):
+        """
+        Scale value or make value zero
+
+        x - the value to either scale up or make zero
+        s - sparsification factor
+
+        RETURN: x scaled up by a factor of s, zero otw
+
+        1/s of the time keep the entry and scale it
+        1 - 1/s of the time lose the entry
+        """
+        r = random.random() # r in range [0.0, 1.0)
+
+        if r <= 1/s:
+            # With probability 1/s scale the entry up
+            return x * s
+        else: 
+            # With probability 1 - 1/s make the entry zero
+            return 0.0
+        
+
     def sparsify(self, A, s=2):
         '''
         Direct implementation of 8.2.2 in Sparsification Algorithms Paper
@@ -88,10 +110,5 @@ class Sparsifier():
             return A
 
         for i in range(nnz):
-            r = random.random() # r in range [0.0, 1.0)
-            if r <= 1/s:
-                # With probability 1/s, scale A_{i,j}
-                A.data[i] *= s
-            else:
-                A.data[i] = 0.0
+            A.data[i] = self.sparse_entry(x=A.data[i], s=s)
         A.eliminate_zeros()
