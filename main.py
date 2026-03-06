@@ -27,18 +27,19 @@ def norm_of_diff(v1, v2, s):
     """
     Return the 2 norm of the difference of the two vectors
     """
+    # Simpler approach: take the minimum of flipping one of th vectors
+    v2_neg = -v2
+    
+    
+    difference_pos = v1 - v2
+    difference_neg = v1 - v2_neg
 
-    dot_prod = np.vdot(v1, v2)
-    if dot_prod < 0:
-        #Force both eigenvectors to point in similar directions
-        v2 = -v2
+    # Test the difference of both the eigenvector and the eigenvector flipped
+    # Take minimum
+    norm_of_diff_pos = np.linalg.norm(difference_pos, ord=2)
+    norm_of_diff_neg = np.linalg.norm(difference_neg, ord=2)
 
-    difference = v1 - v2
-    if (s == 1):
-        print(f"np.vdot(e, e_sparse) = {dot_prod}")
-    norm_of_diff = np.linalg.norm(difference, ord=2)
-
-    return norm_of_diff
+    return min(norm_of_diff_pos, norm_of_diff_neg)
 
 def difference(A, A_sparse, s):
     '''
@@ -182,4 +183,5 @@ def test_bigs():
   
 if __name__ == '__main__': 
     #TODO: MSE
-    test_smalls()
+    # test_smalls()
+    test_bigs()
