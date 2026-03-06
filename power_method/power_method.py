@@ -7,7 +7,7 @@ https://www.geeksforgeeks.org/python/power-method-determine-largest-eigenvalue-a
 
 import numpy as np
 
-def pow_method(A, tol=1e-6, max_iter=100):
+def pow_method(A, tol=1e-6, max_iter=10):
     """
     A        - matrix 
     tol      - The tolerance for the eigenvalue and eigenvector approximations
@@ -15,7 +15,9 @@ def pow_method(A, tol=1e-6, max_iter=100):
                the approximations and the actual values)
     max_iter - The maximum number of iterations
     """
-    cols, rows = A.size
+    # print(f"type(A): {type(A)}")
+    # print(f"A: {A}")
+    cols, rows = A.shape
 
     if (cols != rows):
         print("Power method doesn't work for non-square matrices")
