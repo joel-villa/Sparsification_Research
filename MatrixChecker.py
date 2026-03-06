@@ -2,7 +2,7 @@ from scipy.sparse.linalg import eigs
 import numpy as np
 
 
-class MatrixComparer:
+class MatrixChecker:
     """
     Class for checking the difference between two scipy.sparse matrices
     """
