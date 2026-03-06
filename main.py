@@ -5,7 +5,14 @@ import sparse_algs.sparse_algs as spa
 import matplotlib.pyplot as plt
 import os
 from SSGetter import get_mats
+from SSGetter import SSGetter
 
+"""
+TODO: 
+(1) use SSGetter rather than get_mats
+(2) Make Utitility class for checking difference of two matrices: MatChecker? 
+(3) Clean code up
+"""
 # Get path to matrices 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 matrix_path = os.path.join(BASE_DIR, "matrices")
@@ -160,13 +167,13 @@ def test_bigs():
     """
     Doing tests for large matrices 
     """
-    A_dict = get_mats()
+    A_dict = SSGetter(True, row_bounds=(17755,100000))
+    A_dict = SSGetter.get_next(5)
     S = []
     D = []
     names = []
     ns = []
     for name, A in A_dict.items():
-        # if (name == "bcsstm39" or name == "crystm03"):
         print(name)
         iter(A, S, D, ns)
         names.append(name)

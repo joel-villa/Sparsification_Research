@@ -25,7 +25,7 @@ class SSGetter:
     num_gotten   - tracking how many sparse matrices have been fetched via 
                    ssgetpy
     """
-    def __init__(self, in_csr, row_bounds=(17755,100000)):
+    def __init__(self, in_csr=True, row_bounds=(17755,100000)):
         self.in_csr     = in_csr
         self.row_bounds = row_bounds
         self.isspd      = True
