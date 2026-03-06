@@ -116,12 +116,12 @@ def plot(X, Y, labels, ns):
     for x, y, lbl, n in zip(X, Y, labels, ns):
         t = title + " of " + lbl
         plt.plot(x, y)
-        plt.title(t + f" n = {n}")
+        plt.title(t + f" (n = {n})")
         plt.xlabel(x_label)
         plt.ylabel(y_label)
-        plt.legend()
+        # plt.legend()
         file_name = t.replace(" ", "_")
-        plt.savefig("plots/" + file_name  + ".svg")
+        plt.savefig("plots/" + lbl  + ".svg")
         plt.show()
 
 def load_A():
@@ -135,24 +135,23 @@ def load_A():
         A.append(mmread(os.path.join(matrix_path, mtx_file)).tocsr())
     return A
 
+def iter(A, S, D, ns):
+    n, _ = A.shape
+    ss, _, diff = test(A)
+    D.append(diff)
+    S.append(ss)
+    ns.append(n)
+
 def test_smalls():
     As = load_A()
     S = []
-    P = []
     D = []
     ns = []
 
     num_mats = len(MTX_FILES)
     for A , i in zip(As, range(num_mats)):
         print(MTX_FILES[i])
-        nnz = A.nnz
-        ss, nnzs, diff = test(A)
-        p_sparse = nnzs / nnz
-
-        D.append(diff)
-        S.append(ss)
-        P.append(p_sparse)
-        ns.append(nnz)
+        iter(A, S, D, ns)
 
     plot(S, D, MTX_FILES, ns)
 
@@ -163,21 +162,14 @@ def test_bigs():
     """
     A_dict = get_mats()
     S = []
-    P = []
     D = []
     names = []
     ns = []
     for name, A in A_dict.items():
         # if (name == "bcsstm39" or name == "crystm03"):
         print(name)
-        nnz = A.nnz
-        ss, nnzs, diff = test(A)
-        p_sparse = nnzs / nnz
-        D.append(diff)
-        S.append(ss)
-        P.append(p_sparse)
+        iter(A, S, D, ns)
         names.append(name)
-        ns.append(nnz)
 
     plot(S, D, names, ns)
   
