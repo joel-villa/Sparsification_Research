@@ -4,7 +4,7 @@ import numpy as np
 import sparse_algs.sparse_algs as spa
 import matplotlib.pyplot as plt
 import os
-from MatGetter import get_mats
+from SSGetter import get_mats
 
 # Get path to matrices 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

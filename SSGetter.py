@@ -10,7 +10,17 @@ import ssgetpy
 import os
 
 # Matrix must be at least 17,755 by 17,755 to have valid s-values for sparse-alg
-mats = ssgetpy.search(rowbounds=(17755,100000), isspd=True, limit=5)
+
+class SSGetter:
+    """
+    A 
+    """
+    def __init__(self, rowbounds=(17755,100000), isspd=True):
+        self.rowbounds = rowbounds
+        self.isspd = isspd
+        self.a = []
+    def get():
+        mats = ssgetpy.search(rowbounds=(17755,100000), isspd=True, limit=5)
 
 
 def get_mats():
