@@ -1,11 +1,11 @@
 import numpy as np
-import sparse_algs.sparse_algs as spa
 import matplotlib.pyplot as plt
 import os
 from SSGetter import SSGetter
-from MatrixChecker import MatrixComparer
+from MatrixChecker import MatrixChecker
+from Sparsifier import Sparsifier
 
-NUM_ITERATIONS = 50
+NUM_ITERATIONS = 5
 NUM_SS = 50
 MAX_S = 5
 
@@ -24,8 +24,8 @@ def test(A):
 
     cols, rows = A.shape
 
-    
-    s_max = spa.s_upper_bound(rows, cols, log_base=10)
+    sparsifier = Sparsifier()
+    s_max = sparsifier.s_upper_bound(rows, cols, log_base=10)
 
     if s_max < 1:
         ## the upper bound is below 1, no valid s's
@@ -36,15 +36,15 @@ def test(A):
         s_max = MAX_S
 
     ss = np.linspace(1, s_max, NUM_SS)
-    mp = MatrixComparer()
+    mc = MatrixChecker()
 
     for i, s in zip(range(NUM_SS), ss):
         diff = np.zeros(NUM_ITERATIONS)
         nnz = np.zeros(NUM_ITERATIONS)
         for j in range(NUM_ITERATIONS):
             A_prime = A.copy()
-            spa.sparsify(A_prime, s)
-            diff[j] = mp.difference(A, A_prime)
+            sparsifier.sparsify(A_prime, s)
+            diff[j] = mc.difference(A, A_prime)
             nnz[j] = A_prime.nnz
 
         average_diff = np.mean(diff)
