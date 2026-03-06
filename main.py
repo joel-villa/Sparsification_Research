@@ -1,68 +1,19 @@
-from scipy.io import mmread
-from scipy.sparse.linalg import eigs
 import numpy as np
 import sparse_algs.sparse_algs as spa
 import matplotlib.pyplot as plt
 import os
-from SSGetter import get_mats
 from SSGetter import SSGetter
+from MatrixChecker import MatrixComparer
 
 """
 TODO: 
-(1) use SSGetter rather than get_mats
-(2) Make Utitility class for checking difference of two matrices: MatChecker? 
-(3) Clean code up
+(1) Make Utitility class for checking difference of two matrices: MatChecker? 
+(2) Clean code up
 """
-# Get path to matrices 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-matrix_path = os.path.join(BASE_DIR, "matrices")
 
-NUM_ITERATIONS = 5
+NUM_ITERATIONS = 50
 NUM_SS = 50
 MAX_S = 5
-
-MTX_FILES = ["494_bus.mtx" ,
-             "662_bus.mtx" ,
-             "685_bus.mtx" ,
-             "1138_bus.mtx",
-             "arc130.mtx"  ,
-             "ash85.mtx"   ,
-             "ash292.mtx"  
-]
-
-def norm_of_diff(v1, v2, s):
-    """
-    Return the 2 norm of the difference of the two vectors
-    """
-    # Simpler approach: take the minimum of flipping one of th vectors
-    v2_neg = -v2
-    
-    
-    difference_pos = v1 - v2
-    difference_neg = v1 - v2_neg
-
-    # Test the difference of both the eigenvector and the eigenvector flipped
-    # Take minimum
-    norm_of_diff_pos = np.linalg.norm(difference_pos, ord=2)
-    norm_of_diff_neg = np.linalg.norm(difference_neg, ord=2)
-
-    return min(norm_of_diff_pos, norm_of_diff_neg)
-
-def difference(A, A_sparse, s):
-    '''
-    Return the 2 norm of the difference of the top eigenvectors of the 
-    matrix A and it's sparsified counterpart 
-
-    A        - original matrix
-    A_sparse - sparsified matrix
-    '''
-    _, e = eigs(A, k=1) #k = 1 -> only get top eigenvector
-    _, e_sparse = eigs(A_sparse, k=1) 
-
-    e = e.real
-    e_sparse = e_sparse.real
-
-    return norm_of_diff(e, e_sparse, s)
 
 def test(A):
     """
@@ -91,6 +42,7 @@ def test(A):
         s_max = MAX_S
 
     ss = np.linspace(1, s_max, NUM_SS)
+    mp = MatrixComparer()
 
     for i, s in zip(range(NUM_SS), ss):
         diff = np.zeros(NUM_ITERATIONS)
@@ -98,9 +50,7 @@ def test(A):
         for j in range(NUM_ITERATIONS):
             A_prime = A.copy()
             spa.sparsify(A_prime, s)
-            diff[j] = difference(A, A_prime, s)
-            if (s == 1):
-                print(f"s = {s}, diff[j] = {diff[j]}, A.nnz = {A.nnz}, A_prime.nnz = {A_prime.nnz}")
+            diff[j] = mp.difference(A, A_prime)
             nnz[j] = A_prime.nnz
 
         average_diff = np.mean(diff)
@@ -131,56 +81,26 @@ def plot(X, Y, labels, ns):
         plt.savefig("plots/" + lbl  + ".svg")
         plt.show()
 
-def load_A():
-    """
-    Load in the .mtx files as a scipy csr sparse matrix
-    https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html 
-    """
-    A = []
-    for mtx_file in MTX_FILES:
-        # Read in matrices in CSR format
-        A.append(mmread(os.path.join(matrix_path, mtx_file)).tocsr())
-    return A
+if __name__ == '__main__':
+    # big_ssgetter = SSGetter(True, row_bounds=(17755,100000))
+    small_ssgetter = SSGetter(True, row_bounds=(100,10000))
 
-def iter(A, S, D, ns):
-    n, _ = A.shape
-    ss, _, diff = test(A)
-    D.append(diff)
-    S.append(ss)
-    ns.append(n)
+    # big_mats = big_ssgetter.get_next(5)
+    small_mats = small_ssgetter.get_next(5)
 
-def test_smalls():
-    As = load_A()
-    S = []
-    D = []
-    ns = []
-
-    num_mats = len(MTX_FILES)
-    for A , i in zip(As, range(num_mats)):
-        print(MTX_FILES[i])
-        iter(A, S, D, ns)
-
-    plot(S, D, MTX_FILES, ns)
-
-
-def test_bigs():
-    """
-    Doing tests for large matrices 
-    """
-    A_dict = SSGetter(True, row_bounds=(17755,100000))
-    A_dict = SSGetter.get_next(5)
     S = []
     D = []
     names = []
     ns = []
-    for name, A in A_dict.items():
-        print(name)
-        iter(A, S, D, ns)
+
+    
+
+    for name, A in small_mats.items():
+        n, _ = A.shape
+        ss, _, diff = test(A)
+        D.append(diff)
+        S.append(ss)
+        ns.append(n)
         names.append(name)
 
     plot(S, D, names, ns)
-  
-if __name__ == '__main__': 
-    #TODO: MSE
-    # test_smalls()
-    test_bigs()
