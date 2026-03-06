@@ -7,7 +7,6 @@ from MatrixChecker import MatrixComparer
 
 """
 TODO: 
-(1) Make Utitility class for checking difference of two matrices: MatChecker? 
 (2) Clean code up
 """
 

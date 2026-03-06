@@ -83,12 +83,12 @@ def sparsify(A, s=2):
     n, d = A.shape
 
     # Check for s too small
-    if (s < 1):
+    if (s <= 1):
         return A
 
     for i in range(nnz):
         r = random.random() # r in range [0.0, 1.0)
-        if r < 1/s:
+        if r <= 1/s:
             # With probability 1/s, scale A_{i,j}
             A.data[i] *= s
         else:
