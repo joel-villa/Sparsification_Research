@@ -5,11 +5,6 @@ import os
 from SSGetter import SSGetter
 from MatrixChecker import MatrixComparer
 
-"""
-TODO: 
-(2) Clean code up
-"""
-
 NUM_ITERATIONS = 50
 NUM_SS = 50
 MAX_S = 5
