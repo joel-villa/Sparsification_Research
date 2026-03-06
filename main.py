@@ -5,7 +5,7 @@ from SSGetter import SSGetter
 from MatrixChecker import MatrixChecker
 from Sparsifier import Sparsifier
 
-NUM_ITERATIONS = 5
+NUM_ITERATIONS = 256
 NUM_SS = 50
 MAX_S = 5
 
@@ -38,20 +38,32 @@ def test(A):
     ss = np.linspace(1, s_max, NUM_SS)
     mc = MatrixChecker()
 
+    num_misses = 0 # For handling eigenvector not converging cases
     for i, s in zip(range(NUM_SS), ss):
-        diff = np.zeros(NUM_ITERATIONS)
+        diff = []
         nnz = np.zeros(NUM_ITERATIONS)
         for j in range(NUM_ITERATIONS):
             A_prime = A.copy()
             sparsifier.sparsify(A_prime, s)
-            diff[j] = mc.difference(A, A_prime)
             nnz[j] = A_prime.nnz
+            difference = mc.difference(A, A_prime)
+            if difference is not None:
+                # Default behavior
+                diff.append(difference)
+            else:
+                # Track non converging calls to eigs
+                num_misses += 1
+
 
         average_diff = np.mean(diff)
         average_nnz = np.mean(nnz)
         diffs[i] = average_diff
         nnzs[i] = average_nnz
 
+    if (num_misses > 0):
+        print(f"""
+WARNING: matrix with dimensions {A.shape}, and {A.nnz} nonzeroes had 
+{num_misses} instances where the eigenvector calculator did not converge""")
     return (ss, nnzs, diffs)
 
 def plot(X, Y, labels, ns):

@@ -33,6 +33,9 @@ class MatrixChecker:
 
         A        - original matrix
         A_sparse - sparsified matrix
+
+        Return: None if eigs does not converge, 2 norm of difference of top
+                eigenvectors otw
         '''
 
         # Random number generator:
@@ -44,19 +47,13 @@ class MatrixChecker:
         # Initial guess is close to zero 
         v0 = r_gen.normal(loc=0.0, scale=0.01, size=n) 
 
-        _, e = eigs(A, k=1, v0=v0) #k = 1 -> only get top eigenvector
-        _, e_sparse = eigs(A_sparse, k=1, v0=v0) 
+        try:
+            _, e = eigs(A, k=1, v0=v0) #k = 1 -> only get top eigenvector
+            _, e_sparse = eigs(A_sparse, k=1, v0=v0)
+            
+            return self.norm_of_diff(e, e_sparse)
 
-        # print(f"e: {e}")
-        # print(f"e_sparse: {e_sparse}")
-        # for i in range(len(e)):
-        #     if e[i] - e_sparse[i] > 0.001:
-        #         print(f"e[{i}]: {e[i]}, e_sparse[{i}]: {e_sparse[i]}")
-        # e = e.real
-        # e_sparse = e_sparse.real
-
-        return self.norm_of_diff(e, e_sparse)
-
-if __name__ == '__main__': 
-    mp = MatrixComparer()
-    mp.difference()
+        except Exception as e:
+            # Print exception
+            print(f"Error getting top eigenvector of matrix with dimension {A.shape}")
+            return None
