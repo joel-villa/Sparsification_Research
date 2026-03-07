@@ -38,6 +38,7 @@ if __name__ == '__main__':
     ns = []
 
     for name, A in small_mats.items():
+        print(name)
         n, _ = A.shape
         ss, _, diff = tester.test_s_behavior(A)
         D.append(diff)
