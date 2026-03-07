@@ -1,70 +1,6 @@
-import numpy as np
 import matplotlib.pyplot as plt
-import os
 from SSGetter import SSGetter
-from MatrixChecker import MatrixChecker
-from Sparsifier import Sparsifier
-
-NUM_ITERATIONS = 256
-NUM_SS = 50
-MAX_S = 5
-
-def test(A):
-    """
-    Run sparsification algorithm on the matrix A given various s values
-    
-    RETURN:
-    ss    - the s values run
-    nnzs  - the number of nonzeros on the sparsified A's
-    diffs - the difference in the two norm of the sparsified A's
-    """
-    
-    diffs = np.zeros(NUM_SS)
-    nnzs  = np.zeros(NUM_SS)
-
-    cols, rows = A.shape
-
-    sparsifier = Sparsifier()
-    s_max = sparsifier.s_upper_bound(rows, cols, log_base=10)
-
-    if s_max < 1:
-        ## the upper bound is below 1, no valid s's
-        print(f"s_max = {s_max} < 1, no valid s's")
-        s_max = MAX_S
-
-    if s_max > MAX_S:
-        s_max = MAX_S
-
-    ss = np.linspace(1, s_max, NUM_SS)
-    mc = MatrixChecker()
-
-    num_misses = 0 # For handling eigenvector not converging cases
-    for i, s in zip(range(NUM_SS), ss):
-        diff = []
-        nnz = np.zeros(NUM_ITERATIONS)
-        for j in range(NUM_ITERATIONS):
-            A_prime = A.copy()
-            sparsifier.sparsify(A_prime, s)
-            nnz[j] = A_prime.nnz
-            difference = mc.difference(A, A_prime)
-            if difference is not None:
-                # Default behavior
-                diff.append(difference)
-            else:
-                # Track non converging calls to eigs
-                num_misses += 1
-
-
-        average_diff = np.mean(diff)
-        average_nnz = np.mean(nnz)
-        diffs[i] = average_diff
-        nnzs[i] = average_nnz
-
-    if (num_misses > 0):
-        print(f"""
-WARNING: matrix with dimensions {A.shape}, and {A.nnz} nonzeroes had 
-{num_misses} instances where the eigenvector calculator did not converge""")
-    return (ss, nnzs, diffs)
+from Tester import Tester
 
 def plot(X, Y, labels, ns):
     """
@@ -88,6 +24,8 @@ def plot(X, Y, labels, ns):
         plt.show()
 
 if __name__ == '__main__':
+    tester = Tester()
+
     # big_ssgetter = SSGetter(True, row_bounds=(17755,100000))
     small_ssgetter = SSGetter(True, row_bounds=(100,10000))
 
@@ -99,11 +37,9 @@ if __name__ == '__main__':
     names = []
     ns = []
 
-    
-
     for name, A in small_mats.items():
         n, _ = A.shape
-        ss, _, diff = test(A)
+        ss, _, diff = tester.test_s_behavior(A)
         D.append(diff)
         S.append(ss)
         ns.append(n)
