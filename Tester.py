@@ -52,11 +52,9 @@ class Tester:
         num_misses = 0 # For handling eigenvector not converging cases
         for i, s in zip(range(self.num_ss), ss):
             diff = []
-            nnz = np.zeros(self.num_iter)
             for j in range(self.num_iter):
                 A_prime = A.copy()
                 sparsifier.sparsify(A_prime, s)
-                nnz[j] = A_prime.nnz
                 difference = mc.difference(A, A_prime)
                 if difference is not None:
                     # Default behavior
@@ -67,12 +65,10 @@ class Tester:
 
 
             average_diff = np.mean(diff)
-            average_nnz = np.mean(nnz)
             diffs[i] = average_diff
-            nnzs[i] = average_nnz
 
         if (num_misses > 0):
             print(f"""WARNING: matrix with dimensions {A.shape}, and {A.nnz} 
                   nonzeroes had {num_misses} instances where the eigenvector 
                   estimator did not converge""")
-        return (ss, nnzs, diffs)
+        return (ss, diffs)
