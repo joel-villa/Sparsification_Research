@@ -2,13 +2,14 @@
 A class for saving and loading in files 
 """
 import numpy as np
+import os
 
 
 class Loader:
     def __init__(self):
         pass
 
-    def load(filename, names):
+    def load(self, filename, names):
         """
         Load in the data from the specified file and return it
         If none exists, return None
@@ -27,7 +28,7 @@ class Loader:
             return None
         
         # Load the data
-        loaded_data = np.load(path, allow_pickle=True)a
+        loaded_data = np.load(path)
 
         # the dictionary to return
         data_dict = {}
@@ -38,7 +39,7 @@ class Loader:
         return data_dict
 
 
-    def save(filename, data):
+    def save(self, filename, data):
         """
         Save the data to the specified filename
 
@@ -49,3 +50,9 @@ class Loader:
             "./data/" + filename + ".npz",
             **data # Note: this is called dictionary unpacking
         )
+
+l = Loader()
+dict_one = {"name": "John","age": 25}
+l.save("myFile", dict_one)
+dict = l.load(dict_one.keys)
+print(dict)
