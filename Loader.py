@@ -13,29 +13,29 @@ class Loader:
         Load in the data from the specified file and return it
         If none exists, return None
 
-				filename - file to read from
-				names    - list of the names of the attributes to get
+        filename - file to read from
+        names    - list of the names of the attributes to get
 
-				RETURN: a dictionary (key, value) = ("name", data) 
-								where "name" comes dirrectly from names
+        RETURN: a dictionary (key, value) = ("name", data) 
+                where "name" comes dirrectly from names
         """
 
         path = "./data/" + filename + ".npz"
         
-				if not os.path.exists(path):
-						# No such path, return None
+        if not os.path.exists(path):
+        # No such path, return None
             return None
-				
-				# Load the data
-				loaded_data = np.load(path, allow_pickle=True)a
+        
+        # Load the data
+        loaded_data = np.load(path, allow_pickle=True)a
 
-				# the dictionary to return
-				data_dict = {}
+        # the dictionary to return
+        data_dict = {}
 
-				for name in names:
-						data_dict[name] = loaded_data[name]
+        for name in names:
+            data_dict[name] = loaded_data[name]
 
-				return data_dict
+        return data_dict
 
 
     def save(filename, data):
