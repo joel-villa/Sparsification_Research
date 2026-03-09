@@ -26,37 +26,25 @@ class Tester:
 
         RETURN: 
         ss    - the s values run
-        nnzs  - the number of nonzeros on the sparsified A's
         diffs - the difference in the two norm of the sparsified A's
         """
 
         diffs = np.zeros(self.num_ss)
-        nnzs  = np.zeros(self.num_ss)
+
+        sparsifier = self.sparsifier
 
         cols, rows = A.shape
 
-        sparsifier = self.sparsifier
-        s_max = sparsifier.s_upper_bound(rows, cols, log_base=10)
+        ss = self.get_ss(rows=rows, cols=cols)
 
-        if s_max < 1:
-            ## the upper bound is below 1, no valid s's
-            print(f"s_max = {s_max} < 1, no valid s's")
-            s_max = self.max_s
-
-        if s_max > self.max_s:
-            s_max = self.max_s
-
-        ss = np.linspace(1, s_max, self.num_ss)
         mc = MatrixChecker()
 
         num_misses = 0 # For handling eigenvector not converging cases
         for i, s in zip(range(self.num_ss), ss):
             diff = []
-            nnz = np.zeros(self.num_iter)
-            for j in range(self.num_iter):
+            for _ in range(self.num_iter):
                 A_prime = A.copy()
                 sparsifier.sparsify(A_prime, s)
-                nnz[j] = A_prime.nnz
                 difference = mc.difference(A, A_prime)
                 if difference is not None:
                     # Default behavior
@@ -67,12 +55,32 @@ class Tester:
 
 
             average_diff = np.mean(diff)
-            average_nnz = np.mean(nnz)
             diffs[i] = average_diff
-            nnzs[i] = average_nnz
 
         if (num_misses > 0):
             print(f"""WARNING: matrix with dimensions {A.shape}, and {A.nnz} 
                   nonzeroes had {num_misses} instances where the eigenvector 
                   estimator did not converge""")
-        return (ss, nnzs, diffs)
+        return diffs
+    
+
+    def get_ss(self, rows, cols):
+        """
+        Get the s values for a particular matrix A
+        rows - number of rows in A 
+        cols - number of columns in A
+
+        return - a set of self.num_ss points from 1 to some upperbound
+        """
+       
+        s_max = self.sparsifier.s_upper_bound(num_rows=rows, num_cols=cols, log_base=10)
+
+        if s_max < 1:
+            ## the upper bound is below 1, no valid s's
+            print(f"s_max = {s_max} < 1, no valid s's")
+            s_max = self.max_s
+
+        if s_max > self.max_s:
+            s_max = self.max_s
+
+        return np.linspace(1, s_max, self.num_ss)
