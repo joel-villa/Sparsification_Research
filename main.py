@@ -24,20 +24,22 @@ def plot(X, Y, labels, ns):
         plt.show()
 
 if __name__ == '__main__':
-    tester = Tester()
+    tester = Tester(num_iter=64, 
+                    num_ss=50, 
+                    max_s=5)
 
-    # big_ssgetter = SSGetter(True, row_bounds=(17755,100000))
-    small_ssgetter = SSGetter(True, row_bounds=(100,10000))
+    big_ssgetter = SSGetter(True, row_bounds=(17755,100000))
+    # small_ssgetter = SSGetter(True, row_bounds=(100,10000))
 
-    # big_mats = big_ssgetter.get_next(5)
-    small_mats = small_ssgetter.get_next(5)
+    big_mats = big_ssgetter.get_next(5)
+    # small_mats = small_ssgetter.get_next(5)
 
     S = []
     D = []
     names = []
     ns = []
 
-    for name, A in small_mats.items():
+    for name, A in big_mats.items():
         print(name)
         n, _ = A.shape
         ss, _, diff = tester.test_s_behavior(A)
