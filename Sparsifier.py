@@ -9,6 +9,8 @@ https://users.cs.utah.edu/~jeffp/teaching/cs7931-S15/cs7931/8-sparsification.pdf
 
 Which is a summary of the following paper:
 https://dl.acm.org/doi/pdf/10.1145/1219092.1219097 
+
+TODO: may need to do 10,000*10,000 nonzeroes
 """
 class Sparsifier():
     """
