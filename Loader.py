@@ -77,8 +77,3 @@ class Loader:
         data_dict[DICT_KEYS[3]] = n
 
         return data_dict
-
-
-l = Loader()
-dict = l.load("662_bus")
-print(dict)
