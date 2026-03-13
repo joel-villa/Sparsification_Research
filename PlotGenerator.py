@@ -5,7 +5,7 @@ from Loader import Loader
 import matplotlib.pyplot as plt
 
 class PlotGenerator:
-    def plot(self, name):
+    def plot(self, name, download=False):
         """
         Generate a plot for the given file name
         """
@@ -24,10 +24,12 @@ class PlotGenerator:
         plt.xlabel(x_label)
         plt.ylabel(y_label)
 
-        # plt.savefig("plots/" + name  + ".svg")
+        if download:
+            plt.savefig("plots/" + name  + ".svg")
 
         plt.show()
     
+if __name__ == '__main__':
+    generator = PlotGenerator()
+    generator.plot("bmw7st_1"  , True)
 
-# generator = PlotGenerator()
-# generator.plot("cfd2")
