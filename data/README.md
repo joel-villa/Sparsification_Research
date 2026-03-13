@@ -1,0 +1,13 @@
+The data in this file was generated with the following meta-data:
+
+## cfd2, pwtk:
+
+NUM_ITER = 2
+NUM_SS = 5
+MAX_S = 5
+
+## 494, 662, 685_bus, bc225k03 & 36:
+
+NUM_ITER = 10
+NUM_SS = 50
+MAX_S = 5

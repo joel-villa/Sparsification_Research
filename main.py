@@ -6,7 +6,7 @@ from PlotGenerator import PlotGenerator
 import numpy as np
 
 NUM_ITER = 10
-NUM_SS = 50
+NUM_SS = 5
 MAX_S = 5
 
 def weighted_avg(x1, x2, w1, w2):
@@ -34,13 +34,14 @@ if __name__ == '__main__':
 
     loader = Loader()
 
-    # big_ssgetter = SSGetter(True, row_bounds=(17755,100000))
-    small_ssgetter = SSGetter(True, row_bounds=(100,10000))
+    ssgetter = SSGetter(True, row_bounds=(250000,500000))
+    #ssgetter = SSGetter(True, row_bounds=(100,10000))
 
-    # big_mats = big_ssgetter.get_next(5)
-    small_mats = small_ssgetter.get_next(5)
+    mats = ssgetter.get_next(2)
+    # mats = ssgetter.get_by_name(names=["cfd2"])
 
-    for name, A in small_mats.items():
+
+    for name, A in mats.items():
 
         #Load in the stored data
         data_dict = loader.load(name)
@@ -76,4 +77,5 @@ if __name__ == '__main__':
         loader.save(name, data_dict)
 
 
-        plt.plot(name=name)
+        #plt.plot(name=name)
+    print("DONE")

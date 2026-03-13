@@ -29,5 +29,5 @@ class PlotGenerator:
         plt.show()
     
 
-generator = PlotGenerator()
-generator.plot("bcsstk03")
+# generator = PlotGenerator()
+# generator.plot("cfd2")
