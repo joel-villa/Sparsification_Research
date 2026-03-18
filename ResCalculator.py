@@ -41,6 +41,6 @@ class ResCalculator:
                 print(f"ERROR: x never set in ResCalculator")
             x = self.x
         
-        res = self.b - A * x
+        res = self.b - A @ x
 
         return (norm(res) / norm(self.b))
