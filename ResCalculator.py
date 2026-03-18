@@ -14,9 +14,12 @@ class ResCalculator:
         x - a vector of length m
         b - a vector of length n
         """
-        self.A = A
-        self.x = x
-        self.b = b
+        if (A is not None):
+            self.A = A.copy
+        if (x is not None):
+            self.x = x.copy
+        if (b is not None):
+            self.b = b
         
     def get_res(self, A=None, x=None):
         """
