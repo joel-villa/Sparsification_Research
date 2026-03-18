@@ -17,14 +17,7 @@ class ResCalculator:
         self.A = A
         self.x = x
         self.b = b
-
-        n, m = A.shape
-        if (m != len(x)):
-            print(f"WARNING: in ResCalculator, {m} = m != len(x) = {len(x)}")
-
-        if (n != len(b)):
-            print(f"WARNING: in ResCalculator, {n} = m != len(b) = {len(b)}")
-
+        
     def get_res(self, A=None, x=None):
         """
         Given a matrix, and two vectors that supposedly solve Ax = b, 
