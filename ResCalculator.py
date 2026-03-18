@@ -15,9 +15,9 @@ class ResCalculator:
         b - a vector of length n
         """
         if (A is not None):
-            self.A = A.copy
+            self.A = A.copy()
         if (x is not None):
-            self.x = x.copy
+            self.x = x.copy()
         if (b is not None):
             self.b = b
         
@@ -44,6 +44,6 @@ class ResCalculator:
                 print(f"ERROR: x never set in ResCalculator")
             x = self.x
         
-        res = self.b - A @ x
+        res = self.b - (A @ x)
 
         return (norm(res) / norm(self.b))
