@@ -29,6 +29,30 @@ class PlotGenerator:
 
         plt.show()
     
+    def plot_residuals(self, name, n, nnz, num_iter, residuals, download=False):
+        """
+        Generate the plot for the residuals of a matrix with the provided name
+
+        name      - name of the matrix 
+        residuals - residuals from sparse matrix vector multiplication
+        download  - download the figure? 
+        """
+        # COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+        # if num_iter > len(COLORS):
+        #     raise ValueError(f"Can only plot {len(COLORS)}, iterations, {num_iter} too large")
+
+        
+        title = f"SpMv Residual Behavior of {name} (n = {n} , nnz = {nnz})"
+        x_label = "s"
+        y_label = r"$\frac{||Ax - \tilde{A} x||_2 } {||Ax||_2} $"
+
+        #TODO: residual plotting
+
+        if download:
+            plt.savefig(f"plots/{name}.svg")
+
+        plt.show()
+    
 if __name__ == '__main__':
     generator = PlotGenerator()
     generator.plot("bmw7st_1"  , True)
