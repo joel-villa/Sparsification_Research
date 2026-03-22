@@ -32,6 +32,30 @@ class SSGetter:
         self.dtype      = "real" #TODO: is this okay?
         self.num_gotten = 0
 
+    #TODO get function, enter matrix name, and get it in dict form
+
+    def get_by_name(self, names):
+        """
+        Generate a dictionary of form (key, value) = ("name", matrix)
+        """
+        mat_dict = {}
+
+        for name in names:
+            mat = ssgetpy.search(name)[0]
+            print(f"mat: {mat}")
+
+            if mat is None:
+                # Could not get mat
+                print(f"Uh oh, {name} is not in suitesparse collection")
+                continue
+
+            loaded_mat = self._load_mat(mat)
+            if self.in_csr:
+                loaded_mat = loaded_mat.tocsr()
+            mat_dict[mat.name] = loaded_mat
+        
+        return mat_dict
+
     def get_next(self, num_mats=4):
         """
         Gets the next matrices from the suite sparse matrix collection
