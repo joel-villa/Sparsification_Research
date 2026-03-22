@@ -96,4 +96,4 @@ def test_two():
 
 
 if __name__ == '__main__':
-    test_two
+    test_two()
