@@ -41,7 +41,9 @@ class Tester:
         
         for s_val in ss:
             s_res = []
-            for x in xs:
+            for i in range(xs.shape[1]):
+                x = xs[:, i]
+                
                 # Sparsify A
                 A_sparse = A.copy()
                 self.sparsifier.sparsify(A_sparse, s_val)
