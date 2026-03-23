@@ -49,8 +49,9 @@ class PlotGenerator:
             plt.plot(ss, x_res)
             # plt.plot(ss, x_res, label=lbl)
 
-        # Average Case
-        plt.plot(ss, avg_res, label="average_behavior")
+        if (avg_res is not None):
+            # Average Case
+            plt.plot(ss, avg_res, label="average_behavior")
 
         # Labels
         title = f"SpMV Residual Behavior of {name} (n = {n} , nnz = {nnz})"
