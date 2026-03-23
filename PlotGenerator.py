@@ -19,8 +19,8 @@ class PlotGenerator:
         y_label = rf"$||e - \tilde e||$"
 
         plt.plot(data_dict['ss'], data_dict['diffs'])
-        plt.title(title)
 
+        plt.title(title)
         plt.xlabel(x_label)
         plt.ylabel(y_label)
 
@@ -29,30 +29,34 @@ class PlotGenerator:
 
         plt.show()
     
-    def plot_residuals(self, name, n, nnz, residuals, download=False):
+    def plot_residuals(self, name, n, nnz, ss, residuals, download=False):
         """
         Generate the plot for the residuals of a matrix with the provided name
 
         name      - name of the matrix 
         n         - number of columns & rows in A
         nnz       - number of nonzeroes in A
+        ss        - s values used
         residuals - residuals from sparse matrix vector multiplication, 2d array
-                    columns are the sparsification behavior of some random x 
+                    rows are the sparsification behavior of some random x 
                     vector
         download  - download the figure? 
         """
-        # COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
-        # if num_iter > len(COLORS):
-        #     raise ValueError(f"Can only plot {len(COLORS)}, iterations, {num_iter} too large")
+        # Residual plotting
+        for x_res, i in zip(residuals, range(len(residuals))):
+            plt.plot(ss, x_res, label=rf"$x_{{{i}}}$")
 
-        
+        # Labels
         title = f"SpMv Residual Behavior of {name} (n = {n} , nnz = {nnz})"
         x_label = "s"
         y_label = r"$\frac{||Ax - \tilde{A} x||_2 } {||Ax||_2} $"
 
-        #TODO: residual plotting, list slicing to get columns
+        plt.title(title)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
 
-
+        # Legend
+        plt.legend(loc='best')
 
         if download:
             plt.savefig(f"plots/{name}.svg")

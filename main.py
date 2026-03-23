@@ -5,7 +5,7 @@ from Loader import Loader
 from PlotGenerator import PlotGenerator
 import numpy as np
 
-NUM_ITER = 3
+NUM_ITER = 10
 NUM_SS = 10
 MAX_S = 8
 
@@ -83,16 +83,26 @@ def test_two():
     Checking how accurate the sparser matrix is at approximating Ax
     """
     MATS = ["494_bus"]
+    NUM_XS = 5
 
     tester = Tester(num_iter=NUM_ITER, num_ss=NUM_SS, max_s=MAX_S)
     ssgetter = SSGetter()
     mat_dict = ssgetter.get_by_name(MATS)
+    plt_gen = PlotGenerator()
 
     for name, A in mat_dict.items():
         print(f"matrix name: {name}")
+        n, m = A.shape
 
-        ss = tester.get_ss()
-        residuals = tester.test(A, ss)
+        ss = tester.get_ss(rows=n, cols=m)
+        residuals = tester.test(A, ss, NUM_XS)
+
+        plt_gen.plot_residuals(name=name,
+                               n = n,
+                               nnz = A.nnz,
+                               ss = ss,
+                               residuals= residuals,
+                               download=False)
 
 
 if __name__ == '__main__':

@@ -26,38 +26,42 @@ class Tester:
         self.num_ss     = num_ss
         self.max_s      = max_s
 
-    def test(self, A, ss):
+    def test(self, A, ss, num_xs):
         """
         Given a scipy sparse matrix A, and some factor of sparsification s, 
         test how close Ax is to ~Ax, where ~A is the sparsified version of A.
         Do this for randomly generated x values, num_iter times
 
-        A  - sparse matrix 
-        ss - the s value(s) to sparsify A with
+        A      - sparse matrix 
+        ss     - the s value(s) to sparsify A with
+        num_xs - the number of x vectors tested
         """
 
         residuals = []
-        xs = np.random.rand(A.shape[0], self.num_iter) # randomly generated x vectors
-        
-        for s_val in ss:
-            s_res = []
-            for i in range(xs.shape[1]):
-                x = xs[:, i]
-                
-                # Sparsify A
-                A_sparse = A.copy()
-                self.sparsifier.sparsify(A_sparse, s_val)
+        xs = np.random.rand(num_xs, A.shape[0]) # randomly generated x vectors
+        for x in xs:
+            x_res = []
 
-                # Calculate b
-                b = A @ x
+            # Calculate b
+            b = A @ x
 
-                # Calculate sparse b
-                b_sparse = A_sparse @ x
+            for s_val in ss:
+                iter_res_vals = []
+                for i in range(self.num_iter):
+                    # Sparsify A
+                    A_sparse = A.copy()
+                    self.sparsifier.sparsify(A_sparse, s_val)
 
-                # Measure and save difference (residual)
-                res = (norm(b - b_sparse) / norm(b))
-                s_res.append(res)
-            residuals.append(s_res)
+                    # Calculate sparse b
+                    b_sparse = A_sparse @ x
+
+                    # Measure and save difference (residual)
+                    res = (norm(b - b_sparse) / norm(b))
+                    iter_res_vals.append(res)
+
+                avg_res = np.mean(iter_res_vals)
+                x_res.append(avg_res)
+            residuals.append(x_res)
 
         # Return residuals
         return residuals
