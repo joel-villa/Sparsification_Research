@@ -29,7 +29,7 @@ class PlotGenerator:
 
         plt.show()
     
-    def plot_residuals(self, name, n, nnz, ss, residuals, download=False):
+    def plot_residuals(self, name, n, nnz, ss, residuals, avg_res=None, download=False):
         """
         Generate the plot for the residuals of a matrix with the provided name
 
@@ -40,14 +40,20 @@ class PlotGenerator:
         residuals - residuals from sparse matrix vector multiplication, 2d array
                     rows are the sparsification behavior of some random x 
                     vector
+        avg_res   - the average residuals
         download  - download the figure? 
         """
         # Residual plotting
         for x_res, i in zip(residuals, range(len(residuals))):
-            plt.plot(ss, x_res, label=rf"$x_{{{i}}}$")
+            lbl = rf"$x_{{{i}}}$"
+            plt.plot(ss, x_res)
+            # plt.plot(ss, x_res, label=lbl)
+
+        # Average Case
+        plt.plot(ss, avg_res, label="average_behavior")
 
         # Labels
-        title = f"SpMv Residual Behavior of {name} (n = {n} , nnz = {nnz})"
+        title = f"SpMV Residual Behavior of {name} (n = {n} , nnz = {nnz})"
         x_label = "s"
         y_label = r"$\frac{||Ax - \tilde{A} x||_2 } {||Ax||_2} $"
 

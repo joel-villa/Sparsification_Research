@@ -5,9 +5,9 @@ from Loader import Loader
 from PlotGenerator import PlotGenerator
 import numpy as np
 
-NUM_ITER = 10
-NUM_SS = 10
-MAX_S = 8
+NUM_ITER = 50
+NUM_SS = 20
+MAX_S = 16
 
 def weighted_avg(x1, x2, w1, w2):
     """
@@ -97,12 +97,16 @@ def test_two():
         ss = tester.get_ss(rows=n, cols=m)
         residuals = tester.test(A, ss, NUM_XS)
 
-        plt_gen.plot_residuals(name=name,
+        # axis=0 computes the mean along the first dimension (down the columns)
+        average_res = np.mean(residuals, axis=0) 
+
+        plt_gen.plot_residuals(name = name,
                                n = n,
                                nnz = A.nnz,
                                ss = ss,
-                               residuals= residuals,
-                               download=False)
+                               residuals = residuals,
+                               avg_res = average_res,
+                               download = False)
 
 
 if __name__ == '__main__':
