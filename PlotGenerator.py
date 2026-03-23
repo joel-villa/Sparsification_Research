@@ -29,12 +29,16 @@ class PlotGenerator:
 
         plt.show()
     
-    def plot_residuals(self, name, n, nnz, num_iter, residuals, download=False):
+    def plot_residuals(self, name, n, nnz, residuals, download=False):
         """
         Generate the plot for the residuals of a matrix with the provided name
 
         name      - name of the matrix 
-        residuals - residuals from sparse matrix vector multiplication
+        n         - number of columns & rows in A
+        nnz       - number of nonzeroes in A
+        residuals - residuals from sparse matrix vector multiplication, 2d array
+                    columns are the sparsification behavior of some random x 
+                    vector
         download  - download the figure? 
         """
         # COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
@@ -46,7 +50,9 @@ class PlotGenerator:
         x_label = "s"
         y_label = r"$\frac{||Ax - \tilde{A} x||_2 } {||Ax||_2} $"
 
-        #TODO: residual plotting
+        #TODO: residual plotting, list slicing to get columns
+
+
 
         if download:
             plt.savefig(f"plots/{name}.svg")
