@@ -66,7 +66,7 @@ class PlotGenerator:
         plt.legend(loc='best')
 
         if download:
-            plt.savefig(f"plots/{name}.svg")
+            plt.savefig(f"plots/{name}.jpg")
 
         plt.show()
     

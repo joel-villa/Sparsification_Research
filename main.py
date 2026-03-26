@@ -5,9 +5,9 @@ from Loader import Loader
 from PlotGenerator import PlotGenerator
 import numpy as np
 
-NUM_ITER = 50
-NUM_SS = 20
-MAX_S = 16
+NUM_ITER = 10
+NUM_SS = 32
+MAX_S = 1.5
 
 def weighted_avg(x1, x2, w1, w2):
     """
@@ -82,7 +82,7 @@ def test_two():
     """
     Checking how accurate the sparser matrix is at approximating Ax
     """
-    MATS = ["494_bus"]
+    MATS = ["494_bus", "662_bus", "685_bus", "1138_bus", "bcsstk21", "bcsstm25", "bcsstm39", "finan512", "jnlbrng1", "m3plates"]
     NUM_XS = 5
 
     tester = Tester(num_iter=NUM_ITER, num_ss=NUM_SS, max_s=MAX_S)
@@ -106,7 +106,7 @@ def test_two():
                                ss = ss,
                                residuals = residuals,
                                avg_res = average_res,
-                               download = False)
+                               download = True)
 
 
 if __name__ == '__main__':
