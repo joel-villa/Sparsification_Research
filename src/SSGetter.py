@@ -32,8 +32,6 @@ class SSGetter:
         self.dtype      = "real" #TODO: is this okay?
         self.num_gotten = 0
 
-    #TODO get function, enter matrix name, and get it in dict form
-
     def get_by_name(self, names):
         """
         Generate a dictionary of form (key, value) = ("name", matrix)
@@ -145,64 +143,3 @@ class SSGetter:
         except Exception as e:
             # Print exception
             print(f"Error loading matrix {m.name}: {e}")
-
-
-def get_mats():
-    """
-    TODO: legacy code, delete when everything refactored properly
-    """
-    #TODO: convert to class
-    matrices = {}
-    mats = ssgetpy.search(rowbounds=(17755,100000), 
-                          isspd=True, 
-                          limit=5)
-    for m in mats:
-        m.download()  # Download the matrix
-        
-        # Get the local path of the .tar.gz file
-        path_tuple = m.localpath() # This returns a tuple (two identical paths)
-        tar_path = path_tuple[0]       # Use the first path (both are the same)
-        
-        try:
-            # Extract the .tar.gz file to get the matrix file inside
-            if tar_path.endswith('.tar.gz'):
-                with tarfile.open(tar_path, 'r:gz') as tar:
-                    # Extract files in the same folder as the .tar.gz file
-                    extract_dir = os.path.dirname(tar_path)
-                    tar.extractall(path=extract_dir)  # Extract to the same folder
-                
-                # After extraction, find the matrix file (.mtx) in the extracted files
-                matrix_file = None
-                extract_dir = os.path.join(extract_dir, m.name)
-                for extracted_file in os.listdir(extract_dir):
-                    if extracted_file.endswith('.mtx'):
-                        matrix_file = extracted_file
-                        break
-                
-                if matrix_file is None:
-                    raise FileNotFoundError(f"No .mtx file found in {extract_dir}")
-                
-                # Full path to the extracted matrix file
-                extracted_path = os.path.join(extract_dir, matrix_file)
-
-                # Now, read the extracted matrix file using mmread
-                A = mmread(extracted_path).tocsr()
-                matrices[m.name] = A
-            else:
-                print(f"Matrix {m.name} is not in .tar.gz format.")
-        
-        except Exception as e:
-            # Print exception
-            print(f"Error loading matrix {m.name}: {e}")
-
-    return matrices
-
-if __name__ == '__main__': 
-    """
-    Testing behavior of SSGetter class
-    TODO: delete this main
-    """
-    ssgetter = SSGetter(in_csr=False, row_bounds=(50, 10000))
-    mat_dict = ssgetter.get_next()
-    for name, A in mat_dict.items():
-        print(f"name: {name}, type(A): {type(A)}, A.shape: {A.shape}, A.nnz: {A.nnz}")

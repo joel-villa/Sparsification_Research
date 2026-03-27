@@ -1,7 +1,7 @@
 """
 A class for loading the plots utilizing Loader class
 """
-from Loader import Loader
+from .Loader import Loader
 import matplotlib.pyplot as plt
 
 class PlotGenerator:
