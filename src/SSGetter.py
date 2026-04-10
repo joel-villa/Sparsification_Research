@@ -28,7 +28,7 @@ class SSGetter:
     def __init__(self, 
                  in_csr=True, 
                  row_bounds=(17755,100000), 
-                 col_bounds=(17755,100000),
+                 col_bounds=None,
                  isspd=True):
         self.in_csr     = in_csr
         self.row_bounds = row_bounds
@@ -76,11 +76,18 @@ class SSGetter:
         """
 
         # (1) Fetch mats with ssgetpy and save metadata
-        mats = ssgetpy.search(rowbounds=self.row_bounds,
-                              colbounds=self.col_bounds, 
-                              isspd=self.isspd, 
-                              dtype=self.dtype,
-                              limit=(self.num_gotten + num_mats))
+        if (self.col_bounds is not None):
+            # Likely a rectangual matrix -> isspd setting to default behavior
+            mats = ssgetpy.search(rowbounds=self.row_bounds,
+                                  colbounds=self.col_bounds,  
+                                  dtype=self.dtype,
+                                  limit=(self.num_gotten + num_mats))
+        else:
+            # Requesting square, symmetric positive definite matrix
+            mats = ssgetpy.search(rowbounds=self.row_bounds,
+                                  isspd=self.isspd, 
+                                  dtype=self.dtype,
+                                  limit=(self.num_gotten + num_mats))
         
         mats = mats[self.num_gotten:]
 
