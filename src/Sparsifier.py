@@ -13,11 +13,20 @@ https://dl.acm.org/doi/pdf/10.1145/1219092.1219097
 TODO: may need to do 10,000*10,000 nonzeroes
 """
 class Sparsifier():
-    def __init__(self, seed=42):
-        self.rng = np.random.default_rng(seed=seed)
     """
     A sparsifier object used for sparsifying scipy.sparse matrices in csr format
     """
+    def __init__(self, seed=42):
+        self.seed(seed)
+
+    def seed(self, seed):
+        """ 
+        Set the seed of the random number generator
+
+        seed - seed 
+        """
+        self.rng = np.random.default_rng(seed=seed)
+
     def s_upper_bound(self, num_rows, num_cols, log_base=10):
         """
         Get the upper bound for the valid s values of a matrix
@@ -72,7 +81,7 @@ class Sparsifier():
             # print(f"INVALID s, {s} > {s_upper_bound(num_rows, num_cols)} = (n + d) / (4 * log(n + d)^6))")
             return False 
         return True
-
+    
     def sparse_entry(self, x, s):
         """
         Scale value or make value zero
