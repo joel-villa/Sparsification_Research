@@ -46,13 +46,12 @@ class SSGetter:
         for name in names:
             try:
                 mat = ssgetpy.search(name)[0]
+                loaded_mat = self._load_mat(mat)
+                if self.in_csr:
+                    loaded_mat = loaded_mat.tocsr()
+                mat_dict[mat.name] = loaded_mat
             except: 
                 print(f"Matrix with name \"{name}\" is not in suitesparse collection")
-
-            loaded_mat = self._load_mat(mat)
-            if self.in_csr:
-                loaded_mat = loaded_mat.tocsr()
-            mat_dict[mat.name] = loaded_mat
         
         return mat_dict
 
