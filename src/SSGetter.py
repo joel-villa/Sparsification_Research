@@ -25,10 +25,15 @@ class SSGetter:
     num_gotten   - tracking how many sparse matrices have been fetched via 
                    ssgetpy
     """
-    def __init__(self, in_csr=True, row_bounds=(17755,100000)):
+    def __init__(self, 
+                 in_csr=True, 
+                 row_bounds=(17755,100000), 
+                 col_bounds=(17755,100000),
+                 isspd=True):
         self.in_csr     = in_csr
         self.row_bounds = row_bounds
-        self.isspd      = True
+        self.col_bounds = col_bounds
+        self.isspd      = isspd
         self.dtype      = "real" #TODO: is this okay?
         self.num_gotten = 0
 
@@ -39,13 +44,10 @@ class SSGetter:
         mat_dict = {}
 
         for name in names:
-            mat = ssgetpy.search(name)[0]
-            print(f"mat: {mat}")
-
-            if mat is None:
-                # Could not get mat
-                print(f"Uh oh, {name} is not in suitesparse collection")
-                continue
+            try:
+                mat = ssgetpy.search(name)[0]
+            except: 
+                print(f"Matrix with name \"{name}\" is not in suitesparse collection")
 
             loaded_mat = self._load_mat(mat)
             if self.in_csr:
@@ -74,7 +76,8 @@ class SSGetter:
         """
 
         # (1) Fetch mats with ssgetpy and save metadata
-        mats = ssgetpy.search(rowbounds=self.row_bounds, 
+        mats = ssgetpy.search(rowbounds=self.row_bounds,
+                              col_bounds=self.col_bounds, 
                               isspd=self.isspd, 
                               dtype=self.dtype,
                               limit=(self.num_gotten + num_mats))
