@@ -1,6 +1,6 @@
-import random
 from math import log
 from numpy import linspace
+import numpy as np
 
 """
 The following sparsification algorithms are based on 
@@ -16,6 +16,17 @@ class Sparsifier():
     """
     A sparsifier object used for sparsifying scipy.sparse matrices in csr format
     """
+    def __init__(self, seed=42):
+        self.seed(seed)
+
+    def seed(self, seed):
+        """ 
+        Set the seed of the random number generator
+
+        seed - seed 
+        """
+        self.rng = np.random.default_rng(seed=seed)
+
     def s_upper_bound(self, num_rows, num_cols, log_base=10):
         """
         Get the upper bound for the valid s values of a matrix
@@ -70,7 +81,7 @@ class Sparsifier():
             # print(f"INVALID s, {s} > {s_upper_bound(num_rows, num_cols)} = (n + d) / (4 * log(n + d)^6))")
             return False 
         return True
-
+    
     def sparse_entry(self, x, s):
         """
         Scale value or make value zero
@@ -83,7 +94,7 @@ class Sparsifier():
         1/s of the time keep the entry and scale it
         1 - 1/s of the time lose the entry
         """
-        r = random.random() # r in range [0.0, 1.0)
+        r = self.rng.random() # r in range [0.0, 1.0)
 
         if r <= 1/s:
             # With probability 1/s scale the entry up
