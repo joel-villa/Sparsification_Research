@@ -1,6 +1,6 @@
-import random
 from math import log
 from numpy import linspace
+import numpy as np
 
 """
 The following sparsification algorithms are based on 
@@ -13,6 +13,8 @@ https://dl.acm.org/doi/pdf/10.1145/1219092.1219097
 TODO: may need to do 10,000*10,000 nonzeroes
 """
 class Sparsifier():
+    def __init__(self, seed=42):
+        self.rng = np.random.default_rng(seed=seed)
     """
     A sparsifier object used for sparsifying scipy.sparse matrices in csr format
     """
@@ -83,7 +85,7 @@ class Sparsifier():
         1/s of the time keep the entry and scale it
         1 - 1/s of the time lose the entry
         """
-        r = random.random() # r in range [0.0, 1.0)
+        r = self.rng.random() # r in range [0.0, 1.0)
 
         if r <= 1/s:
             # With probability 1/s scale the entry up
