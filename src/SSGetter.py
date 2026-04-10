@@ -77,7 +77,7 @@ class SSGetter:
 
         # (1) Fetch mats with ssgetpy and save metadata
         mats = ssgetpy.search(rowbounds=self.row_bounds,
-                              col_bounds=self.col_bounds, 
+                              colbounds=self.col_bounds, 
                               isspd=self.isspd, 
                               dtype=self.dtype,
                               limit=(self.num_gotten + num_mats))
