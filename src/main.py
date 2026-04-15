@@ -3,6 +3,8 @@ from .SSGetter import SSGetter
 from .Tester import Tester
 from .Loader import Loader
 from .PlotGenerator import PlotGenerator
+from .Plotter import Plotter
+from .tests import *
 import numpy as np
 
 NUM_ITER = 10
@@ -110,6 +112,61 @@ def test_two():
                                avg_res = average_res,
                                download = True)
 
+def test_md():
+    """
+    For testing preservation of top eigenvector w/ tests from tests.py
+    """
+    ss_getter = SSGetter(in_csr=False)
+    mats = ss_getter.get_by_name(names=["494_bus", "662_bus", "685_bus"])
+    # mats = ss_getter.get_by_name(names=["494_bus"])
+    # mats = ss_getter.get_by_name(names=["662_bus"])
+    # mats = ss_getter.get_by_name(names=["685_bus"])
+
+    xs = range(0, 100, 5)
+    seed = 10
+    num_avg = 25
+
+    plotter = Plotter(save_fig=False, show_fig=True)
+    plotter.init_plot(title="top eigenvector preservation of Sparsification",
+                      x_label="expected number of new zeros",
+                      y_label="norm of difference in top eigenvectors",
+                      save_name="new_plot")
+
+    # MD Sparsifier test
+    print("Starting MD Sparsifier test")
+    for name, A in mats.items():
+        ys = np.zeros(np.shape(xs))
+
+        for i in range(num_avg):
+            seed_i = seed + i 
+            ss, ys_i = test_eig_pres_of_md_sparsifier(A, xs, seed=seed_i)
+
+            ys += ys_i
+
+        ys = ys / num_avg
+
+        plotter.add_to_plot(xs, ys, label=f"{name} (nnz = {A.nnz}) (MD)")
+    print("Finished MD Sparsifier test")
+    
+    # # Generic Sparsifier test
+    # print("Starting Generic Sparsifier test")
+    # for name, A in mats.items():
+    #     ys = np.zeros(np.shape(xs))
+
+    #     for i in range(num_avg):
+    #         seed_i = seed + i 
+    #         ss, ys_i = test_eig_pres_of_sparsifier(A, xs, seed=seed_i)
+
+    #         ys += ys_i
+
+    #     ys = ys / num_avg
+
+    #     plotter.add_to_plot(xs, ys, label=f"{name} (nnz = {A.nnz})")
+    # print("Finished Generic Sparsifier test")
+
+    plotter.finish()
+
+
 
 if __name__ == '__main__':
-    test_two()
+    test_md()
