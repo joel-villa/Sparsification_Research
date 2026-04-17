@@ -11,6 +11,9 @@ NUM_ITER = 10
 NUM_SS = 32
 MAX_S = 1.5
 
+"""
+weighted_avg(), test_one(), and test_two() are stale/old code
+"""
 def weighted_avg(x1, x2, w1, w2):
     """
     Calculate the weighted average of the given data
