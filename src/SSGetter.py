@@ -55,7 +55,8 @@ class SSGetter:
         
         if (len(mat_dict) != len(names)):
             # When not enough matrices read in, print a warning
-            print(f"Warning, {len(names)} matrices requested, returning {len(mat_dict)}")
+            print(f"Warning, {len(names)} matrices requested, returning {len(mat_dict)}\
+                  NOTE: get_by_name expects a list of names")
         return mat_dict
 
     def get_next(self, num_mats=4):
@@ -166,3 +167,4 @@ if __name__ == '__main__':
 
     ss_getter = SSGetter()
     mat_dict = ss_getter.get_by_name(["bcsstk21"])
+    print(mat_dict)
