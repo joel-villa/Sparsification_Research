@@ -51,7 +51,7 @@ class SSGetter:
                     loaded_mat = loaded_mat.tocsr()
                 mat_dict[mat.name] = loaded_mat
             except: 
-                print(f"Matrix with name \"{name}\" is not in suitesparse collection")
+                print(f"Failed to get \"{name}\" from suitesparse collection")
         
         return mat_dict
 
