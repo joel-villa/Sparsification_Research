@@ -53,6 +53,9 @@ class SSGetter:
             except: 
                 print(f"Failed to get \"{name}\" from suitesparse collection")
         
+        if (len(mat_dict) != len(names)):
+            # When not enough matrices read in, print a warning
+            print(f"Warning, {len(names)} matrices requested, returning {len(mat_dict)}")
         return mat_dict
 
     def get_next(self, num_mats=4):
@@ -152,3 +155,14 @@ class SSGetter:
         except Exception as e:
             # Print exception
             print(f"Error loading matrix {m.name}: {e}")
+
+
+if __name__ == '__main__':
+    """
+    Testing ssgetpy bug
+    """
+
+    mats = ["bcsstk21", "finan512", "jnlbrng1"]
+
+    ss_getter = SSGetter()
+    mat_dict = ss_getter.get_by_name(["bcsstk21"])
