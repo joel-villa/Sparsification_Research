@@ -37,6 +37,24 @@ class SSGetter:
         self.dtype      = "real" #TODO: is this okay?
         self.num_gotten = 0
 
+    def get(self, name):
+        """
+        name - A string, the name of some matrix in the SS matrix collection
+
+        RETURN: a matrix in CSR or COO format
+
+        Get the matrix with the given name from the suite sparse collection
+        """
+        try:
+            mat = ssgetpy.search(name)[0]
+            loaded_mat = self._load_mat(mat)
+            if self.in_csr:
+                loaded_mat = loaded_mat.tocsr()
+        except: 
+            print(f"Failed to get \"{name}\" from suitesparse collection")
+
+        return loaded_mat
+    
     def get_by_name(self, names):
         """
         Generate a dictionary of form (key, value) = ("name", matrix)
@@ -44,14 +62,17 @@ class SSGetter:
         mat_dict = {}
 
         for name in names:
-            try:
-                mat = ssgetpy.search(name)[0]
-                loaded_mat = self._load_mat(mat)
-                if self.in_csr:
-                    loaded_mat = loaded_mat.tocsr()
-                mat_dict[mat.name] = loaded_mat
-            except: 
-                print(f"Failed to get \"{name}\" from suitesparse collection")
+            mat_dict[name] = self.get(name)
+
+        # for name in names:
+        #     try:
+        #         mat = ssgetpy.search(name)[0]
+        #         loaded_mat = self._load_mat(mat)
+        #         if self.in_csr:
+        #             loaded_mat = loaded_mat.tocsr()
+        #         mat_dict[mat.name] = loaded_mat
+        #     except: 
+        #         print(f"Failed to get \"{name}\" from suitesparse collection")
         
         if (len(mat_dict) != len(names)):
             # When not enough matrices read in, print a warning
@@ -166,5 +187,5 @@ if __name__ == '__main__':
     mats = ["bcsstk21", "finan512", "jnlbrng1"]
 
     ss_getter = SSGetter()
-    mat_dict = ss_getter.get_by_name(["bcsstk21"])
+    mat_dict = ss_getter.get("bcsstk21")
     print(mat_dict)
