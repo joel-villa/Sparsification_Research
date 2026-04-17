@@ -19,12 +19,17 @@ class Plotter():
         self.show_fig = show_fig
         plt.rcParams['figure.figsize'] = (16, 8)
         
-    def init_plot(self, title, x_label, y_label, save_name, grid_on=False):
+    def init_plot(self, title, x_label, y_label, save_name, grid_on=False, desceneding_x=False):
         plt.title(title)
         plt.xlabel(x_label)
         plt.ylabel(y_label)
         self.save_path = f"plots/{save_name}.jpg"
         plt.grid(visible=grid_on)
+
+        if (desceneding_x):
+            # flipping vertical axis
+            ax=plt.gca()
+            ax.invert_xaxis()
 
     def add_to_plot(self, xs, ys, label):
         """
