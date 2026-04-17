@@ -17,12 +17,14 @@ class Plotter():
     def __init__(self, save_fig, show_fig):
         self.save_fig = save_fig
         self.show_fig = show_fig
+        plt.rcParams['figure.figsize'] = (16, 8)
         
-    def init_plot(self, title, x_label, y_label, save_name):
+    def init_plot(self, title, x_label, y_label, save_name, grid_on=False):
         plt.title(title)
         plt.xlabel(x_label)
         plt.ylabel(y_label)
         self.save_path = f"plots/{save_name}.jpg"
+        plt.grid(visible=grid_on)
 
     def add_to_plot(self, xs, ys, label):
         """
@@ -38,3 +40,5 @@ class Plotter():
             plt.savefig(self.save_path)
         if self.show_fig:
             plt.show()
+
+        plt.clf()
