@@ -2,7 +2,7 @@
 A class for testing the behavior of a Sparsifier
 """
 import numpy as np
-from .Sparsifier import Sparsifier
+from ..Sparsifier import Sparsifier
 from .MatrixChecker import MatrixChecker
 from scipy.linalg import norm # 2 norm: https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.norm.html
 

@@ -1,8 +1,8 @@
 # import matplotlib.pyplot as plt
 from .SSGetter import SSGetter
-from .Tester import Tester
-from .Loader import Loader
-from .PlotGenerator import PlotGenerator
+from .old_code.Tester import Tester
+from .old_code.Loader import Loader
+from .old_code.PlotGenerator import PlotGenerator
 from .Plotter import Plotter
 from .tests import *
 import numpy as np
