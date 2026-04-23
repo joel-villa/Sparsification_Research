@@ -59,7 +59,16 @@ class SGenerator:
         s = self.off_diags / (self.off_diags - x)
 
         return s
+    
+    def proportion_sparse_s(self, p=0.5):
+        """
+        p - the expected proportion of reduction
+        The s s.t. the expected percent of sparsification is p
+        """
+        x = self.nnz * p
 
+        return self.get_min_s(x)
+    
     def get_safe_s(self, type="nnz"):
         """
         Get the maximum possible s-value (i.e. expected number of zeros greater
