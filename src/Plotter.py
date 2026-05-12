@@ -14,10 +14,10 @@ COLORS = ["black",
         "#FF7DF0",
         "#F72B2B"]
 class Plotter():
-    def __init__(self, save_fig, show_fig):
+    def __init__(self, save_fig, show_fig, fig_size=(16, 8)):
         self.save_fig = save_fig
         self.show_fig = show_fig
-        plt.rcParams['figure.figsize'] = (16, 8)
+        plt.rcParams['figure.figsize'] = fig_size
         
     def init_plot(self, title, x_label, y_label, save_name, grid_on=False, desceneding_x=False):
         plt.title(title)
