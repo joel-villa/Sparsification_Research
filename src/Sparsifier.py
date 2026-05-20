@@ -104,7 +104,7 @@ class Sparsifier():
             return 0.0
         
 
-    def sparsify(self, A, s=2):
+    def sparsify(self, A, s):
         '''
         Direct implementation of 8.2.2 in Sparsification Algorithms Paper
 
