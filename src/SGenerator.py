@@ -41,7 +41,7 @@ class SGenerator:
             case _:
                 return np.log
     
-    def get_min_s(self, x=1):
+    def get_min_s(self, x=1, include_diags=False):
         """
         The minimum s-value s.t. the expected number of nonzeros is 1 or more
 
@@ -49,14 +49,22 @@ class SGenerator:
 
         This values was found mathematically:
         E(X) = # of new nonzeros
-        E(X) = n(1-s)
-        E(X) >= x --> s >= n / (n-x)
+        E(X) = n(1 - (1 / s))
+        E(X) >= x --> s >= n / (n - x)
             where n is the candidate nonzeros (off diagonal count)
         """
-        if (self.off_diags - x <= 0):
-            raise ValueError(f"nnz candidates is {self.off_diags}, can't reduce by {x}")
+        if (include_diags):
+            # Diagonal is being sparsified, take it into account
+            candidate_nnzs = self.nnz
+        else: 
+            # Diagonal not being sparsified, only care about off-diagonals
+            candidate_nnzs = self.off_diags
 
-        s = self.off_diags / (self.off_diags - x)
+
+        if (candidate_nnzs - x <= 0):
+            raise ValueError(f"nnz candidates is {candidate_nnzs}, can't reduce by {x}")
+
+        s = candidate_nnzs / (candidate_nnzs - x)
 
         return s
     
@@ -78,7 +86,7 @@ class SGenerator:
             # Diagonal is not being sparsified, don't account for it
             x = self.off_diags * p
 
-        return self.get_min_s(x)
+        return self.get_min_s(x, include_diags)
     
     def get_safe_s(self, type="nnz"):
         """
