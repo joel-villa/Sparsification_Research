@@ -23,7 +23,7 @@ class SGenerator:
         """
         self.n = n
         self.nnz = nnz
-        #The number of potential sparsified values (not sparsifying diagonal)
+        #The number of potential sparsified values (when not sparsifying diagonal)
         self.off_diags = self.nnz - self.n
         self.log = self.get_log_func(log_base)
 
@@ -60,12 +60,23 @@ class SGenerator:
 
         return s
     
-    def proportion_sparse_s(self, p=0.5):
-        """
-        p - the expected proportion of reduction
-        The s s.t. the expected percent of sparsification is p
-        """
-        x = self.nnz * p
+    def proportion_sparse_s(self, p=0.5, include_diags=False):
+        """ Get the s value s.t. the expected percent of sparsification is p
+
+        Args:
+            p: the expected proportion of reduction
+            include_diags: True -> based on nnzs, 
+                           False -> based on nnzs - diagonal
+        
+        Return:
+            The appropriate s-value
+        """        
+        if (include_diags):
+            # Diagonal is being sparsified, take it into account
+            x = self.nnz * p
+        else:
+            # Diagonal is not being sparsified, don't account for it
+            x = self.off_diags * p
 
         return self.get_min_s(x)
     
