@@ -42,16 +42,21 @@ class SGenerator:
                 return np.log
     
     def get_min_s(self, x=1, include_diags=False):
-        """
-        The minimum s-value s.t. the expected number of nonzeros is 1 or more
-
-        x - the desired expected amount of new nonzeros after sparsification
+        """ The minimum s-value s.t. the expected number of nonzeros is 1 or 
+        more
 
         This values was found mathematically:
-        E(X) = # of new nonzeros
-        E(X) = n(1 - (1 / s))
-        E(X) >= x --> s >= n / (n - x)
-            where n is the candidate nonzeros (off diagonal count)
+            E(X) = # of new nonzeros
+            E(X) = n(1 - (1 / s))
+            E(X) >= x --> s >= n / (n - x)
+                where n is the candidate nonzeros (off diagonal count)
+            
+        Args:
+            x: the desired expected amount of new nonzeros after sparsification
+            include_diags: True -> sparsifying diagonal, False -> not
+
+        Return:
+            s-value s.t. the expected number of new zeros when sparsified is x
         """
         if (include_diags):
             # Diagonal is being sparsified, take it into account
